@@ -1,0 +1,40 @@
+@charset "utf-8";
+
+@font-face {
+    font-family: NerisLight;
+    src: url("../font/Neris-Light.otf") format("opentype");
+}
+
+@font-face {
+    font-family: NerisLight;
+    font-weight: bold;
+    src: url("../font/Neris-SemiBold.otf") format("opentype");
+}
+
+body {
+	font-family: NerisLight;
+    font-size: 12px;
+    margin: 0px auto auto auto;
+    padding: 0;
+}
+
+#menu {
+    display: block;
+    position: absolute;
+    border: 3px solid green;
+    width: 50px;
+    height: 40px;
+}
+
+#main {
+    /*position: relative;
+    top: 50%;
+    transform: perspective(1px) translateY(-50%);*/
+	position: relative;
+    margin: auto;
+    height: auto;
+    width: 50%;
+    height: 100%;
+    border: 3px solid green;
+    padding: 10px;
+}
