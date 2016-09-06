@@ -1,0 +1,57 @@
+Parâmetros Configuráveis e Valores Padrão
+L: Local
+R: Remoto
+
+- Unidades
+* Centro de Recepção
+* Centro de Serviço 1 (Destino Local)
+** Número de Servidores: 10
+* Centor de Serviço 2 (Destino Remoto)
+** Número de Servidores: 20
+
+- Semente de Aleatoriedade
+96
+
+- Tempo de Simulação
+10
+
+- Volume de Tráfego (100%)
+LL: 50
+LR: 25
+RL: 15
+RR: 5
+
+- Proporção de Adiamentos, Falhas e Sucessos
+Direção     Sucesso     Fracasso    Adiamento   Total
+LL          87,00       0,50        12,50       100,00
+LR          96,00       1,50        2,50        100,00
+RL          96,00       3,00        1,00        100,00
+RR          90,00       1,00        9,00        100,00
+
+- Tempo Entre Chegadas
+L: Exponencial(0,5)
+R: Exponencial(0,6)
+
+- Tempo de Serviço
+
+    Tipo                        Centro
+     de             Recepção      de
+Processamento        (seg.)     Serviço
+LLS                 0,12        Função F1
+LLF                 0,14        Função F2
+LLA                 0,11        Função F3
+LRS                 0,12        Função F4
+LRF                 0,13        Função F5
+LRA                 0,15        Função F6
+RLS                 0,12        Função F7
+RLF                 0,14        Função F8
+RLA                 0,11        Função F9
+RRS                 0,16        Função F10
+RRF                 0,13        Função F11
+RRA                 0,16        Função F12
+
+Função F* pode ser:
+* Constante
+* Normal
+* Triangular
+* Uniforme
