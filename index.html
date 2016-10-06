@@ -18,9 +18,70 @@
 </head>
 
 <body>
-    <div id="menu">CFG</div>
+    <script>
+    
+        function playSimulation(src) {
+            if(src.id == "btn_play") {
+                src.id = "btn_pause";
+                document.getElementById("img_play").setAttribute("src", "images/appbar.control.pause.png");
+            } else {
+                src.id = "btn_play";
+                document.getElementById("img_play").setAttribute("src", "images/appbar.control.play.png");
+            }
+        }
+        
+        function stopSimulation() {
+            document.getElementById("img_play").setAttribute("src", "images/appbar.control.play.png");
+            document.getElementById("img_play").parentElement.id = "btn_play";
+        }
+        
+        function showHideConfigurationsBox() {
+            if(document.getElementById('settings').style.opacity == 0) {
+                document.getElementById('settings').style.visibility = 'visible';
+                document.getElementById('settings').style.opacity = 1;
+            } else {
+                document.getElementById('settings').style.opacity = 0;
+                document.getElementById('settings').style.visibility = 'hidden';
+            }
+        }
+        
+    </script>
+    
+    <div id="menu">
+        <ul>
+            <li>
+                <img src="images/appbar.information.png" width="50px" />
+                <span class="tooltiptext">Sobre</span>
+            </li>
+            <li onclick="showHideConfigurationsBox()">
+                <img src="images/appbar.cog.png" width="50px" />
+                <span class="tooltiptext">Configurações</span>
+            </li>
+            <li>
+                <img src="images/appbar.timer.png" width="50px" />
+                <span class="tooltiptext">Tempo de Simulação</span>
+            </li>
+            <li id="btn_play" onclick="playSimulation(this)">
+                <img id="img_play" src="images/appbar.control.play.png" width="50px" />
+                <span class="tooltiptext">Iniciar/Pausar</span>
+            </li>
+            <li>
+                <img src="images/appbar.control.fastforward.variant.png" width="50px" />
+                <span class="tooltiptext">Passo-a-Passo</span>
+            </li>
+            <li id="btn_stop" onclick="stopSimulation()">
+                <img src="images/appbar.control.stop.png" width="50px" />
+                <span class="tooltiptext">Parar</span>
+            </li>
+        </ul> 
+    </div>
     <div id="main">Teste</div>
-    <!--<script src="js/scripts.js"></script>
+    
+    
+    <div id="settings">Teste</div>
+    
+    <!--
+    <div>Icons made by <a href="http://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 
     -->
 </body>

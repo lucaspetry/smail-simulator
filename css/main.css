@@ -1,40 +1,104 @@
 @charset "utf-8";
 
-@font-face {
-    font-family: NerisLight;
-    src: url("../font/Neris-Light.otf") format("opentype");
-}
-
-@font-face {
-    font-family: NerisLight;
-    font-weight: bold;
-    src: url("../font/Neris-SemiBold.otf") format("opentype");
-}
-
 body {
-	font-family: NerisLight;
+	font-family: sans-serif;
     font-size: 12px;
     margin: 0px auto auto auto;
     padding: 0;
-}
-
-#menu {
-    display: block;
-    position: absolute;
-    border: 3px solid green;
-    width: 50px;
-    height: 40px;
+    height: 100%;
+    background-color: #F2F0E9;
 }
 
 #main {
     /*position: relative;
     top: 50%;
     transform: perspective(1px) translateY(-50%);*/
-	position: relative;
-    margin: auto;
-    height: auto;
+    background-color: white;
+    position: absolute;
+    margin-left: 25%;
     width: 50%;
     height: 100%;
-    border: 3px solid green;
-    padding: 10px;
+    padding: 7px;
+}
+
+#menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-right-color: #E8E6DF;
+    display: block;
+    position: absolute;
+    width: 50px;
+    height: 100%;
+    background-color: white;
+}
+
+#menu ul li {
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    filter: opacity(0.6);
+}
+
+#menu ul li:hover {
+    /*background-color: #F2F0E9;*/
+    cursor: pointer;
+    filter: none;
+}
+
+#menu ul li .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 4px;
+    position: absolute;
+    left: 115%;
+    margin-top: 10px;
+    z-index: 5;
+}
+
+#menu ul li .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    right: 100%; /* To the left of the tooltip */
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+}
+
+#menu ul li:hover .tooltiptext {
+    visibility: visible;
+}
+
+/* make keyframes that tell the start state and the end state of our object 
+@-webkit-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@-moz-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+*/
+#settings {
+    visibility: hidden;
+    background-color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #E3E0D8;
+    padding: 7px;
+    position: fixed;
+    width: 400px;
+    height: 300px;
+    margin: -200px auto auto -150px;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    -webkit-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
 }
