@@ -184,11 +184,11 @@
                         <td class="label_field">LLA</td>
                         <td><input class="input_field" type="number" id=""></td>
                         <td>
-                            <select id="TEST" style="width: 100px;"></select>
+                            <select id="TEST" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
                         </td>
-                        <td><input class="input_field" type="number" id="" disabled></td>
-                        <td><input class="input_field" type="number" id="" disabled></td>
-                        <td><input class="input_field" type="number" id="" disabled></td>                    
+                        <td><input class="input_field" type="number" id="TESTParam1" disabled></td>
+                        <td><input class="input_field" type="number" id="TESTParam2" disabled></td>
+                        <td><input class="input_field" type="number" id="TESTParam3" disabled></td>                    
                     </tr>
                 </table>
             </table>
@@ -212,33 +212,42 @@
     <script>
         var e = document.getElementById("TEST");
         loadFunctionOptions(e);
-//        var strUser = e.options[e.selectedIndex].value;
-//        console.log(strUser);
         
-//        var optionsAsString = "";
-//        for(var i = 0; i < productArray.length; i++) {
-//            optionsAsString += "<option value='" + productArray[i] + "'>" + productArray[i] + "</option>";
-//        }
-//        $( 'select[name="inptProduct"]' ).append( optionsAsString );
-        
-        
-        // document.getElementById("TEST").disabled = false;
         var simulation = new Simulation();
         loadDefaultSettings();
         
         function loadFunctionOptions(selectElement) {
+            console.log("Method call: loadFunctionOptions(selectElement)");
+            
             for(i = 0; i < Function.NUMBER_OF_FUNCTIONS; i++) {
-                var option = document.createElement("option");
+                option = document.createElement("option");
                 option.value = Function.NUMBER[Function.INDEX[i]];
                 // option.disabled = true;
                 option.innerHTML = Function.NAME[Function.INDEX[i]];
                 selectElement.options.add(option, i);
             }
+        }
         
-//        <option value=Function.EXPONENCIAL>Exponencial</option>
-//        <option value="Function.NORMAL">Normal</option>
-//        <option value="Function.TRIANGULAR">Triangular</option>
-//        <option value="Function.UNIFORM">Uniforme</option>
+        function updateFunctionParams(selectElement) {
+            console.log("Method call: updateFunctionParams(selectElement)");
+            
+            selectedFunction = selectElement.options[selectElement.selectedIndex].value;
+            functionParams = Function.PARAMS[Function.INDEX[selectedFunction] || Function.INDEX[0]];
+            
+            document.getElementById(selectElement.id + "Param1").disabled = true;
+            document.getElementById(selectElement.id + "Param2").disabled = true;
+            document.getElementById(selectElement.id + "Param3").disabled = true;
+            
+            switch(functionParams.length) {
+                case 3:
+                    document.getElementById(selectElement.id + "Param3").disabled = false;
+                case 2:
+                    document.getElementById(selectElement.id + "Param2").disabled = false;
+                case 1:
+                    document.getElementById(selectElement.id + "Param1").disabled = false;
+                default:
+                    break;
+            }
         }
     
         function playSimulation(src) {

@@ -20,5 +20,12 @@ Function = {
         NORMAL : "Normal",
         TRIANGULAR : "Triangular",
         UNIFORM : "Uniforme"
+    },
+    PARAMS : {
+        CONSTANT : [],
+        EXPONENCIAL : ["x"],
+        NORMAL : ["x", "y"],
+        TRIANGULAR : ["a", "b", "c"],
+        UNIFORM : ["a", "b"]
     }
 };
