@@ -111,7 +111,24 @@
                 <th><input class="input_field" type="number" id="field_ratePostponementRR"></th>
             </tr>
         </table>
+        <br>
+        <table border="0">
+            <caption>Centros de Serviço</caption>
+            <tr>
+                <th style="text-align: left;">Centro de Serviço</th>
+                <th>Servidores</th>
+            </tr>
+            <tr>
+                <th class="label_field">Destino Local</th>
+                <th><input class="input_field" type="number" id="field_serversLocal"></th>
+            </tr>
+            <tr>
+                <th class="label_field">Destino Remoto</th>
+                <th><input class="input_field" type="number" id="field_serversRemote"></th>
+            </tr>
+        </table>
     </div>
+    
     <div id="time_settings_box">
         <table border="0">
             <tr>
@@ -173,9 +190,12 @@
             }
         }
         
-        function loadDefaultSettings() {
+        function loadDefaultSettings() {                                        
             document.getElementById('field_simulationTime').value = simulation.simulationTime; 
             document.getElementById('field_simulationSeed').value = simulation.simulationSeed;          
+            
+            document.getElementById('field_serversLocal').value = simulation.localServiceCenter.numberOfServers;
+            document.getElementById('field_serversRemote').value = simulation.remoteServiceCenter.numberOfServers;
             
             document.getElementById('field_trafficLL').value = simulation.trafficLL;
             document.getElementById('field_trafficLR').value = simulation.trafficLR;

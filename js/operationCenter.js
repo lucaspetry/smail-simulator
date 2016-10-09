@@ -9,7 +9,8 @@ function ReceptionCenter() {
 /**
  * Construtor de um centro de serviço
  */
-function ServiceCenter() {
+function ServiceCenter(numberOfServers) {
+    this.numberOfServers = numberOfServers;
     "use strict";
 }
 

@@ -4,8 +4,8 @@
 function Simulation() {
     "use strict";
     this.receptionCenter = new ReceptionCenter();
-    this.localServiceCenter = new ServiceCenter();
-    this.remoteServiceCenter = new ServiceCenter();
+    this.localServiceCenter = new ServiceCenter(10);
+    this.remoteServiceCenter = new ServiceCenter(20);
     this.simulationTime = 500;
     this.simulationSeed = 11;
     
