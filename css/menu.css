@@ -1,0 +1,57 @@
+@charset "utf-8";
+
+#menu ul {
+    background-color: white;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-right-color: #E8E6DF;
+    height: 100%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: 50px;
+    z-index: 10;
+}
+
+#menu ul li {
+    background-color: white;
+    filter: opacity(0.6);
+    height: 50px;
+    position: relative;
+    width: 50px;
+}
+
+#menu ul li:hover {
+    cursor: pointer;
+    filter: none;
+}
+
+#menu ul li .tooltiptext {
+    background-color: black;
+    border-radius: 4px;
+    color: #fff;
+    left: 115%;
+    margin-top: 10px;
+    padding: 5px 0;
+    position: absolute;
+    text-align: center;
+    visibility: hidden;
+    width: 120px;
+    z-index: 5;
+}
+
+#menu ul li:hover .tooltiptext {
+    visibility: visible;
+}
+
+#menu ul li .tooltiptext::after {
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+    content: " ";
+    margin-top: -5px;
+    position: absolute;
+    right: 100%; /* To the left of the tooltip */
+    top: 50%;
+}

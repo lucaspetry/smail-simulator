@@ -3,16 +3,13 @@
 body {
 	font-family: sans-serif;
     font-size: 12px;
-    margin: 0px auto auto auto;
+    margin: 0px;
     padding: 0;
     height: 100%;
     background-color: #F2F0E9;
 }
 
-#main {
-    /*position: relative;
-    top: 50%;
-    transform: perspective(1px) translateY(-50%);*/
+#main_box {
     background-color: white;
     position: absolute;
     margin-left: 25%;
@@ -21,84 +18,94 @@ body {
     padding: 7px;
 }
 
-#menu ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-right-color: #E8E6DF;
-    display: block;
-    position: absolute;
-    width: 50px;
-    height: 100%;
-    background-color: white;
-}
-
-#menu ul li {
-    width: 50px;
-    height: 50px;
-    background-color: white;
-    filter: opacity(0.6);
-}
-
-#menu ul li:hover {
-    /*background-color: #F2F0E9;*/
-    cursor: pointer;
-    filter: none;
-}
-
-#menu ul li .tooltiptext {
-    visibility: hidden;
-    width: 120px;
+#black_box {
     background-color: black;
-    color: #fff;
-    text-align: center;
-    padding: 5px 0;
-    border-radius: 4px;
-    position: absolute;
-    left: 115%;
-    margin-top: 10px;
-    z-index: 5;
-}
-
-#menu ul li .tooltiptext::after {
-    content: " ";
-    position: absolute;
-    top: 50%;
-    right: 100%; /* To the left of the tooltip */
-    margin-top: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent black transparent transparent;
-}
-
-#menu ul li:hover .tooltiptext {
-    visibility: visible;
-}
-
-/* make keyframes that tell the start state and the end state of our object 
-@-webkit-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-@-moz-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-*/
-#settings {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.7s ease-in-out;
     visibility: hidden;
+    z-index: 5;
+    -webkit-transition: all 0.7s ease-in-out;
+    -moz-transition: all 0.7s ease-in-out;
+    -ms-transition: all 0.7s ease-in-out;
+    -o-transition: all 0.7s ease-in-out;
+}
+
+#about_box {
     background-color: white;
+    border-color: #E3E0D8;
+    border-radius: 4px;
     border-style: solid;
     border-width: 1px;
-    border-color: #E3E0D8;
     padding: 7px;
     position: fixed;
-    width: 400px;
-    height: 300px;
-    margin: -200px auto auto -150px;
-    top: 50%;
-    left: 50%;
+    width: 150px;
+    height: 75px;
+    margin-left: 65px;
+    margin-top: 5px;
     opacity: 0;
-    -webkit-transition: all 1s ease-in-out;
-    -moz-transition: all 1s ease-in-out;
-    -ms-transition: all 1s ease-in-out;
-    -o-transition: all 1s ease-in-out;
-    transition: all 1s ease-in-out;
+    transition: all 0.7s ease-in-out;
+    visibility: hidden;
+    z-index: 10;
+    -webkit-transition: all 0.7s ease-in-out;
+    -moz-transition: all 0.7s ease-in-out;
+    -ms-transition: all 0.7s ease-in-out;
+    -o-transition: all 0.7s ease-in-out;
+}
+
+#settings_box {
+    background-color: white;
+    border-color: #E3E0D8;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    height: 400px;
+    left: 50%;
+    margin-left: -300px;
+    margin-top: -200px;
+    padding: 7px;
+    position: fixed;
+    opacity: 0;
+    top: 50%;
+    transition: all 0.7s ease-in-out;
+    visibility: hidden;
+    width: 600px;
+    z-index: 10;
+    -webkit-transition: all 0.7s ease-in-out;
+    -moz-transition: all 0.7s ease-in-out;
+    -ms-transition: all 0.7s ease-in-out;
+    -o-transition: all 0.7s ease-in-out;
+}
+
+#time_settings_box {
+    background-color: white;
+    border-color: #E3E0D8;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    padding: 7px;
+    position: fixed;
+    width: 250px;
+    height: 50px;
+    margin-left: 65px;
+    margin-top: 105px;
+    opacity: 0;
+    transition: all 0.7s ease-in-out;
+    visibility: hidden;
+    z-index: 10;
+    -webkit-transition: all 0.7s ease-in-out;
+    -moz-transition: all 0.7s ease-in-out;
+    -ms-transition: all 0.7s ease-in-out;
+    -o-transition: all 0.7s ease-in-out;
+}
+
+.label_field {
+    text-align: left;
+}
+
+.input_field {
+    max-width: 50px;
+    text-align: right;
 }

@@ -6,7 +6,7 @@ function Simulation() {
     this.receptionCenter = new ReceptionCenter();
     this.localServiceCenter = new ServiceCenter();
     this.remoteServiceCenter = new ServiceCenter();
-    this.simulationTime = 0;
+    this.simulationTime = 500;
     this.simulationSeed = 11;
     
     // Volume de tráfego

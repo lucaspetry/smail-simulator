@@ -6,58 +6,27 @@
     <meta name="description" content="Smail: Simulator">
     <meta name="author" content="Lucas May Petry">
     
-    <script src="js/operationCenter.js"></script>
-    <script src="js/smailSimulator.js"></script>
-
     <title>Smail: Simulador</title>
     
-    <link rel="stylesheet" href="css/main.css?v=1.0">
-<!--[if lt IE 9]>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
-<![endif]-->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/menu.css">
+    
+    <script src="js/operationCenter.js"></script>
+    <script src="js/smailSimulator.js"></script>
 </head>
 
 <body>
-    <script>
-    
-        function playSimulation(src) {
-            if(src.id == "btn_play") {
-                src.id = "btn_pause";
-                document.getElementById("img_play").setAttribute("src", "images/appbar.control.pause.png");
-            } else {
-                src.id = "btn_play";
-                document.getElementById("img_play").setAttribute("src", "images/appbar.control.play.png");
-            }
-        }
-        
-        function stopSimulation() {
-            document.getElementById("img_play").setAttribute("src", "images/appbar.control.play.png");
-            document.getElementById("img_play").parentElement.id = "btn_play";
-        }
-        
-        function showHideConfigurationsBox() {
-            if(document.getElementById('settings').style.opacity == 0) {
-                document.getElementById('settings').style.visibility = 'visible';
-                document.getElementById('settings').style.opacity = 1;
-            } else {
-                document.getElementById('settings').style.opacity = 0;
-                document.getElementById('settings').style.visibility = 'hidden';
-            }
-        }
-        
-    </script>
-    
     <div id="menu">
         <ul>
-            <li>
+            <li onclick="showHideBox('about_box')">
                 <img src="images/appbar.information.png" width="50px" />
                 <span class="tooltiptext">Sobre</span>
             </li>
-            <li onclick="showHideConfigurationsBox()">
+            <li onclick="showHideBox('settings_box')">
                 <img src="images/appbar.cog.png" width="50px" />
                 <span class="tooltiptext">Configurações</span>
             </li>
-            <li>
+            <li onclick="showHideBox('time_settings_box')">
                 <img src="images/appbar.timer.png" width="50px" />
                 <span class="tooltiptext">Tempo de Simulação</span>
             </li>
@@ -75,15 +44,163 @@
             </li>
         </ul> 
     </div>
-    <div id="main">Teste</div>
+    <div id="main_box">
+        <h3>Smail: Simulador de Servidores de E-mails</h3>
+    </div>
     
     
-    <div id="settings">Teste</div>
+    <div id="black_box"></div>
+    <div id="about_box">Sobre</div>
+    <div id="settings_box">
+        <h3>Parâmetros de Simulação</h3>
+        <br>
+        <table border="0">
+            <caption>Volume de Tráfego (%)</caption>
+            <tr>
+                <th style="text-align: left;">Direção</th>
+                <th>Volume</th>
+            </tr>
+            <tr>
+                <th class="label_field">Local -> Local</th>
+                <th><input class="input_field" type="number" id="field_trafficLL"></th>
+            </tr>
+            <tr>
+                <th class="label_field">Local -> Remoto</th>
+                <th><input class="input_field" type="number" id="field_trafficLR"></th>
+            </tr>
+            <tr>
+                <th class="label_field">Remoto -> Local</th>
+                <th><input class="input_field" type="number" id="field_trafficRL"></th>
+            </tr>
+            <tr>
+                <th class="label_field">Remoto -> Remoto</th>
+                <th><input class="input_field" type="number" id="field_trafficRR"></th>
+            </tr>
+        </table>
+        <br>
+        <table border="0">
+            <caption>Proporção de Sucessos, Falhas e Adiamentos (%)</caption>
+            <tr>
+                <th style="text-align: left;">Direção</th>
+                <th>Sucesso</th>
+                <th>Falha</th>
+                <th>Adiamento</th>
+            </tr>
+            <tr>
+                <th class="label_field">Local -> Local</th>
+                <th><input class="input_field" type="number" id="field_rateSuccessLL"></th>
+                <th><input class="input_field" type="number" id="field_rateFailureLL"></th>
+                <th><input class="input_field" type="number" id="field_ratePostponementLL"></th>
+            </tr>
+            <tr>
+                <th class="label_field">Local -> Remoto</th>
+                <th><input class="input_field" type="number" id="field_rateSuccessLR"></th>
+                <th><input class="input_field" type="number" id="field_rateFailureLR"></th>
+                <th><input class="input_field" type="number" id="field_ratePostponementLR"></th>
+            </tr>
+            <tr>
+                <th class="label_field">Remoto -> Local</th>
+                <th><input class="input_field" type="number" id="field_rateSuccessRL"></th>
+                <th><input class="input_field" type="number" id="field_rateFailureRL"></th>
+                <th><input class="input_field" type="number" id="field_ratePostponementRL"></th>
+            </tr>
+            <tr>
+                <th class="label_field">Remoto -> Remoto</th>
+                <th><input class="input_field" type="number" id="field_rateSuccessRR"></th>
+                <th><input class="input_field" type="number" id="field_rateFailureRR"></th>
+                <th><input class="input_field" type="number" id="field_ratePostponementRR"></th>
+            </tr>
+        </table>
+    </div>
+    <div id="time_settings_box">
+        <table border="0">
+            <tr>
+                <th class="label_field">Tempo de Simulação</th>
+                <th><input class="input_field" type="number" id="field_simulationTime"></th>
+                <th>seg.</th>
+            </tr>
+            <tr>
+                <th class="label_field">Semente de Aleatoriedade</th>
+                <th><input class="input_field" type="number" id="field_simulationSeed"></th>
+            </tr>
+        </table>
+    </div>
     
     <!--
     <div>Icons made by <a href="http://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 
     -->
+    <script>
+        
+        var simulation = new Simulation();
+        loadDefaultSettings();
+    
+        function playSimulation(src) {
+            if(src.id == "btn_play") {
+                src.id = "btn_pause";
+                document.getElementById("img_play").setAttribute("src", "images/appbar.control.pause.png");
+            } else {
+                src.id = "btn_play";
+                document.getElementById("img_play").setAttribute("src", "images/appbar.control.play.png");
+            }
+        }
+        
+        function stopSimulation() {
+            document.getElementById("img_play").setAttribute("src", "images/appbar.control.play.png");
+            document.getElementById("img_play").parentElement.id = "btn_play";
+        }
+        
+        function showHideBox(divId) {
+            // Se o container está visível, torna invisível, e vice-versa
+            if(document.getElementById(divId).style.opacity == 0) {
+                document.getElementById(divId).style.visibility = 'visible';
+                document.getElementById(divId).style.opacity = 1;
+            } else {
+                document.getElementById(divId).style.opacity = 0;
+                document.getElementById(divId).style.visibility = 'hidden';
+            }
+            
+            // Se alguma das caixas de informação/configuração estiver ativa,
+            // então esmaece a tela
+            if(document.getElementById('about_box').style.visibility == 'visible'
+              || document.getElementById('settings_box').style.visibility == 'visible'
+              || document.getElementById('time_settings_box').style.visibility == 'visible') {
+                document.getElementById('black_box').style.visibility = 'visible';
+                document.getElementById('black_box').style.opacity = 0.7;                
+            } else {
+                document.getElementById('black_box').style.opacity = 0;
+                document.getElementById('black_box').style.visibility = 'hidden';
+            }
+        }
+        
+        function loadDefaultSettings() {
+            document.getElementById('field_simulationTime').value = simulation.simulationTime; 
+            document.getElementById('field_simulationSeed').value = simulation.simulationSeed;          
+            
+            document.getElementById('field_trafficLL').value = simulation.trafficLL;
+            document.getElementById('field_trafficLR').value = simulation.trafficLR;
+            document.getElementById('field_trafficRL').value = simulation.trafficRL;
+            document.getElementById('field_trafficRR').value = simulation.trafficRR;
+            
+            document.getElementById('field_rateSuccessLL').value = simulation.trafficRateLL[0];
+            document.getElementById('field_rateFailureLL').value = simulation.trafficRateLL[1];
+            document.getElementById('field_ratePostponementLL').value = simulation.trafficRateLL[2];
+            
+            document.getElementById('field_rateSuccessLR').value = simulation.trafficRateLR[0];
+            document.getElementById('field_rateFailureLR').value = simulation.trafficRateLR[1];
+            document.getElementById('field_ratePostponementLR').value = simulation.trafficRateLR[2];
+            
+            document.getElementById('field_rateSuccessRL').value = simulation.trafficRateRL[0];
+            document.getElementById('field_rateFailureRL').value = simulation.trafficRateRL[1];
+            document.getElementById('field_ratePostponementRL').value = simulation.trafficRateRL[2];
+            
+            document.getElementById('field_rateSuccessRR').value = simulation.trafficRateRR[0];
+            document.getElementById('field_rateFailureRR').value = simulation.trafficRateRR[1];
+            document.getElementById('field_ratePostponementRR').value = simulation.trafficRateRR[2];
+            
+        }
+        
+    </script>
 </body>
     
 </html>
