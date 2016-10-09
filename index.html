@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/menu.css">
     
+    <script src="js/function.js"></script>
     <script src="js/operationCenter.js"></script>
     <script src="js/smailSimulator.js"></script>
 </head>
@@ -52,107 +53,197 @@
     <div id="black_box"></div>
     <div id="about_box">Sobre</div>
     <div id="settings_box">
-        <h3>Parâmetros de Simulação</h3>
-        <br>
-        <table border="0">
-            <caption>Volume de Tráfego (%)</caption>
-            <tr>
-                <th style="text-align: left;">Direção</th>
-                <th>Volume</th>
-            </tr>
-            <tr>
-                <th class="label_field">Local -> Local</th>
-                <th><input class="input_field" type="number" id="field_trafficLL"></th>
-            </tr>
-            <tr>
-                <th class="label_field">Local -> Remoto</th>
-                <th><input class="input_field" type="number" id="field_trafficLR"></th>
-            </tr>
-            <tr>
-                <th class="label_field">Remoto -> Local</th>
-                <th><input class="input_field" type="number" id="field_trafficRL"></th>
-            </tr>
-            <tr>
-                <th class="label_field">Remoto -> Remoto</th>
-                <th><input class="input_field" type="number" id="field_trafficRR"></th>
-            </tr>
-        </table>
-        <br>
-        <table border="0">
-            <caption>Proporção de Sucessos, Falhas e Adiamentos (%)</caption>
-            <tr>
-                <th style="text-align: left;">Direção</th>
-                <th>Sucesso</th>
-                <th>Falha</th>
-                <th>Adiamento</th>
-            </tr>
-            <tr>
-                <th class="label_field">Local -> Local</th>
-                <th><input class="input_field" type="number" id="field_rateSuccessLL"></th>
-                <th><input class="input_field" type="number" id="field_rateFailureLL"></th>
-                <th><input class="input_field" type="number" id="field_ratePostponementLL"></th>
-            </tr>
-            <tr>
-                <th class="label_field">Local -> Remoto</th>
-                <th><input class="input_field" type="number" id="field_rateSuccessLR"></th>
-                <th><input class="input_field" type="number" id="field_rateFailureLR"></th>
-                <th><input class="input_field" type="number" id="field_ratePostponementLR"></th>
-            </tr>
-            <tr>
-                <th class="label_field">Remoto -> Local</th>
-                <th><input class="input_field" type="number" id="field_rateSuccessRL"></th>
-                <th><input class="input_field" type="number" id="field_rateFailureRL"></th>
-                <th><input class="input_field" type="number" id="field_ratePostponementRL"></th>
-            </tr>
-            <tr>
-                <th class="label_field">Remoto -> Remoto</th>
-                <th><input class="input_field" type="number" id="field_rateSuccessRR"></th>
-                <th><input class="input_field" type="number" id="field_rateFailureRR"></th>
-                <th><input class="input_field" type="number" id="field_ratePostponementRR"></th>
-            </tr>
-        </table>
-        <br>
-        <table border="0">
-            <caption>Centros de Serviço</caption>
-            <tr>
-                <th style="text-align: left;">Centro de Serviço</th>
-                <th>Servidores</th>
-            </tr>
-            <tr>
-                <th class="label_field">Destino Local</th>
-                <th><input class="input_field" type="number" id="field_serversLocal"></th>
-            </tr>
-            <tr>
-                <th class="label_field">Destino Remoto</th>
-                <th><input class="input_field" type="number" id="field_serversRemote"></th>
-            </tr>
-        </table>
+        <div class="scroll_box">
+            <h3>Parâmetros de Simulação</h3>
+            <br>
+            <table border="0" style="width: 100%">
+                
+                <tr>
+                    <td style="vertical-align: top;">
+                        <table border="0">
+                            <caption>Centros de Serviço</caption>
+                            <tr>
+                                <th style="text-align: left;">Centro de Serviço</th>
+                                <th>Servidores</th>
+                            </tr>
+                            <tr>
+                                <td class="label_field">Destino Local</td>
+                                <td><input class="input_field" type="number" id="field_serversLocal"></td>
+                            </tr>
+                            <tr>
+                                <td class="label_field">Destino Remoto</td>
+                                <td><input class="input_field" type="number" id="field_serversRemote"></td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table border="0">
+                            <caption>Volume de Tráfego (%)</caption>
+                            <tr>
+                                <th style="text-align: left;">Direção</th>
+                                <th>Volume</th>
+                            </tr>
+                            <tr>
+                                <td class="label_field">Local -> Local</td>
+                                <td><input class="input_field" type="number" id="field_trafficLL"></td>
+                            </tr>
+                            <tr>
+                                <td class="label_field">Local -> Remoto</td>
+                                <td><input class="input_field" type="number" id="field_trafficLR"></td>
+                            </tr>
+                            <tr>
+                                <td class="label_field">Remoto -> Local</td>
+                                <td><input class="input_field" type="number" id="field_trafficRL"></td>
+                            </tr>
+                            <tr>
+                                <td class="label_field">Remoto -> Remoto</td>
+                                <td><input class="input_field" type="number" id="field_trafficRR"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <br>
+                <table border="0">
+                    <caption>Proporção de Sucessos, Falhas e Adiamentos (%)</caption>
+                    <tr>
+                        <th style="text-align: left;">Direção</th>
+                        <th>Sucesso</th>
+                        <th>Falha</th>
+                        <th>Adiamento</th>
+                    </tr>
+                    <tr>
+                        <td class="label_field">Local -> Local</td>
+                        <td><input class="input_field" type="number" id="field_rateSuccessLL"></td>
+                        <td><input class="input_field" type="number" id="field_rateFailureLL"></td>
+                        <td><input class="input_field" type="number" id="field_ratePostponementLL"></td>
+                    </tr>
+                    <tr>
+                        <td class="label_field">Local -> Remoto</td>
+                        <td><input class="input_field" type="number" id="field_rateSuccessLR"></td>
+                        <td><input class="input_field" type="number" id="field_rateFailureLR"></td>
+                        <td><input class="input_field" type="number" id="field_ratePostponementLR"></td>
+                    </tr>
+                    <tr>
+                        <td class="label_field">Remoto -> Local</td>
+                        <td><input class="input_field" type="number" id="field_rateSuccessRL"></td>
+                        <td><input class="input_field" type="number" id="field_rateFailureRL"></td>
+                        <td><input class="input_field" type="number" id="field_ratePostponementRL"></td>
+                    </tr>
+                    <tr>
+                        <td class="label_field">Remoto -> Remoto</td>
+                        <td><input class="input_field" type="number" id="field_rateSuccessRR"></td>
+                        <td><input class="input_field" type="number" id="field_rateFailureRR"></td>
+                        <td><input class="input_field" type="number" id="field_ratePostponementRR"></td>
+                    </tr>
+                </table>
+                <br>
+                <table border="0">
+                    <caption>Tempo Entre Chegada de E-mails</caption>
+                    <tr>
+                        <th style="text-align: left;">Origem</th>
+                        <th>Distribuição</th>
+                    </tr>
+                    <tr>
+                        <td class="label_field">Local</td>
+                        <td>
+                            <select id="field_arrivalIntervalLocal" style="width: 100px;">
+                                <option value="EXPO">Exponencial</option>
+                                <option value="NORM" disabled>Normal</option>
+                                <option value="TRIA" disabled>Triangular</option>
+                                <option value="UNIF" disabled>Uniforme</option>
+                            </select>
+                        </td>
+                        <td><input class="input_field" type="number" id="field_arrivalIntervalLocalParam1" disabled></td>
+                        <td><input class="input_field" type="number" id="field_arrivalIntervalLocalParam2" disabled></td>
+                        <td><input class="input_field" type="number" id="field_arrivalIntervalLocalParam3" disabled></td>                    
+                    </tr>
+                    <tr>
+                        <td class="label_field">Remota</td>
+                        <td>
+                            <select id="field_arrivalIntervalRemote" style="width: 100px;">
+                                <option value="EXPO">Exponencial</option>
+                                <option value="NORM" disabled>Normal</option>
+                                <option value="TRIA" disabled>Triangular</option>
+                                <option value="UNIF" disabled>Uniforme</option>
+                            </select>
+                        </td>
+                        <td><input class="input_field" type="number" id="field_arrivalIntervalRemoteParam1" disabled></td>
+                        <td><input class="input_field" type="number" id="field_arrivalIntervalRemoteParam2" disabled></td>
+                        <td><input class="input_field" type="number" id="field_arrivalIntervalRemoteParam3" disabled></td>                    
+                    </tr>
+                </table><br>
+                <table border="0">
+                    <caption>Tempo de Serviço de Acordo com o Tipo de Processamento</caption>
+                    <tr>
+                        <th style="text-align: left;">Processamento</th>
+                        <th>Recepção</th>
+                        <th>Distribuição</th>
+                    </tr>
+                    <tr>
+                        <td class="label_field">LLA</td>
+                        <td><input class="input_field" type="number" id=""></td>
+                        <td>
+                            <select id="TEST" style="width: 100px;"></select>
+                        </td>
+                        <td><input class="input_field" type="number" id="" disabled></td>
+                        <td><input class="input_field" type="number" id="" disabled></td>
+                        <td><input class="input_field" type="number" id="" disabled></td>                    
+                    </tr>
+                </table>
+            </table>
+        </div>
     </div>
     
     <div id="time_settings_box">
         <table border="0">
             <tr>
-                <th class="label_field">Tempo de Simulação</th>
-                <th><input class="input_field" type="number" id="field_simulationTime"></th>
-                <th>seg.</th>
+                <td class="label_field">Tempo de Simulação</td>
+                <td><input class="input_field" type="number" id="field_simulationTime"></td>
+                <td>seg.</td>
             </tr>
             <tr>
-                <th class="label_field">Semente de Aleatoriedade</th>
-                <th><input class="input_field" type="number" id="field_simulationSeed"></th>
+                <td class="label_field">Semente de Aleatoriedade</td>
+                <td><input class="input_field" type="number" id="field_simulationSeed"></td>
             </tr>
         </table>
     </div>
-    
-    <!--
-    <div>Icons made by <a href="http://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 
-    -->
     <script>
+        var e = document.getElementById("TEST");
+        loadFunctionOptions(e);
+//        var strUser = e.options[e.selectedIndex].value;
+//        console.log(strUser);
         
+//        var optionsAsString = "";
+//        for(var i = 0; i < productArray.length; i++) {
+//            optionsAsString += "<option value='" + productArray[i] + "'>" + productArray[i] + "</option>";
+//        }
+//        $( 'select[name="inptProduct"]' ).append( optionsAsString );
+        
+        
+        // document.getElementById("TEST").disabled = false;
         var simulation = new Simulation();
         loadDefaultSettings();
+        
+        function loadFunctionOptions(selectElement) {
+            for(i = 0; i < Function.NUMBER_OF_FUNCTIONS; i++) {
+                var option = document.createElement("option");
+                option.value = Function.NUMBER[Function.INDEX[i]];
+                // option.disabled = true;
+                option.innerHTML = Function.NAME[Function.INDEX[i]];
+                selectElement.options.add(option, i);
+            }
+        
+//        <option value=Function.EXPONENCIAL>Exponencial</option>
+//        <option value="Function.NORMAL">Normal</option>
+//        <option value="Function.TRIANGULAR">Triangular</option>
+//        <option value="Function.UNIFORM">Uniforme</option>
+        }
     
         function playSimulation(src) {
+            console.log("Method call: playSimulation(src)");
+            
             if(src.id == "btn_play") {
                 src.id = "btn_pause";
                 document.getElementById("img_play").setAttribute("src", "images/appbar.control.pause.png");
@@ -163,11 +254,15 @@
         }
         
         function stopSimulation() {
+            console.log("Method call: stopSimulation()");
+            
             document.getElementById("img_play").setAttribute("src", "images/appbar.control.play.png");
             document.getElementById("img_play").parentElement.id = "btn_play";
         }
         
         function showHideBox(divId) {
+            console.log("Method call: showHideBox(divId)");
+            
             // Se o container está visível, torna invisível, e vice-versa
             if(document.getElementById(divId).style.opacity == 0) {
                 document.getElementById(divId).style.visibility = 'visible';
@@ -190,7 +285,9 @@
             }
         }
         
-        function loadDefaultSettings() {                                        
+        function loadDefaultSettings() {
+            console.log("Method call: loadDefaultSettings()");
+            
             document.getElementById('field_simulationTime').value = simulation.simulationTime; 
             document.getElementById('field_simulationSeed').value = simulation.simulationSeed;          
             
@@ -217,9 +314,7 @@
             document.getElementById('field_rateSuccessRR').value = simulation.trafficRateRR[0];
             document.getElementById('field_rateFailureRR').value = simulation.trafficRateRR[1];
             document.getElementById('field_ratePostponementRR').value = simulation.trafficRateRR[2];
-            
         }
-        
     </script>
 </body>
     
