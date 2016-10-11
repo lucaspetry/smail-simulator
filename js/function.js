@@ -1,5 +1,5 @@
 Function = {
-    NUMBER_OF_FUNCTIONS : 5,
+    SIZE : 5,
     INDEX : [
         "CONSTANT",
         "EXPONENCIAL",
@@ -23,9 +23,40 @@ Function = {
     },
     PARAMS : {
         CONSTANT : [],
-        EXPONENCIAL : ["x"],
-        NORMAL : ["x", "y"],
+        EXPONENCIAL : ["λ"],
+        NORMAL : ["μ", "σ"],
         TRIANGULAR : ["a", "b", "c"],
         UNIFORM : ["a", "b"]
+    }
+};
+
+// Origem e destino das requisições
+Direction = {
+    SIZE : 4,
+    INDEX : [
+        "LL",
+        "LR",
+        "RL",
+        "RR"
+    ],
+    NUMBER : {
+        LL : 0,
+        LR : 1,
+        RL : 2,
+        RR : 3
+    }
+};
+
+Status = {
+    SIZE : 3,
+    INDEX : [
+        "S",
+        "F",
+        "A"
+    ],
+    NUMBER : {
+        SUCESS : 0, // Sucesso
+        FAIL : 1, // Falha
+        POSTPONE : 2 // Adiamento
     }
 };
