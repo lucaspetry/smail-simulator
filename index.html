@@ -36,7 +36,7 @@
                 <span class="tooltiptext">Iniciar/Pausar</span>
             </li>
             <li>
-                <img src="images/appbar.control.fastforward.variant.png" width="50px" />
+                <img src="images/appbar.control.step.forward.png" width="50px" />
                 <span class="tooltiptext">Passo-a-Passo</span>
             </li>
             <li id="btn_stop" onclick="stopSimulation()">
@@ -454,12 +454,12 @@
                 for(j = 0; j < Status.SIZE; j++) {
                     document.getElementById('field_proc' + Direction.INDEX[i] + Status.INDEX[j] + "Reception").value = simulation.processing[Direction.INDEX[i]][j][0];
                     func = simulation.processing[Direction.INDEX[i]][j][1];
-                    funcParams = Function.PARAMS[Function.INDEX[func]];
+                    // funcParams = Function.PARAMS[Function.INDEX[func]];
                     
-                    for(i = 0; i < funcParams.length; i++)
-                        document.getElementById('field_proc' + Direction.INDEX[i] + Status.INDEX[j] + "Param" + (i+1)).value = simulation.processing[Direction.INDEX[i]][j][i+2];
+                    // for(i = 0; i < funcParams.length; i++)
+                    //    document.getElementById('field_proc' + Direction.INDEX[i] + Status.INDEX[j] + "Param" + (i+1)).value = simulation.processing[Direction.INDEX[i]][j][i+2];
                     
-                    document.getElementById('field_proc' + Direction.INDEX[i] + Status.INDEX[j]).value = Function.NAME[Function.INDEX[simulation.processing[Direction.INDEX[i]][j][1]]];
+                    // document.getElementById('field_proc' + Direction.INDEX[i] + Status.INDEX[j]).value = Function.NAME[Function.INDEX[simulation.processing[Direction.INDEX[i]][j][1]]];
                     
                 }
             }
