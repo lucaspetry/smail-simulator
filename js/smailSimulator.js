@@ -3,26 +3,23 @@
  */
 function Simulation() {
     "use strict";
-    this.receptionCenter = new ReceptionCenter();
-    this.localServiceCenter = new ServiceCenter(10);
-    this.remoteServiceCenter = new ServiceCenter(20);
     this.simulationTime = 500;
     this.simulationSeed = 11;
     
     // Volume de tráfego
     this.traffic = [0, 0, 0, 0];
-    this.traffic[Direction.LL] = 50;
-    this.traffic[Direction.LR] = 25;
-    this.traffic[Direction.RL] = 15;
-    this.traffic[Direction.RR] = 5;
+    this.traffic[Direction.NUMBER.LL] = 50;
+    this.traffic[Direction.NUMBER.LR] = 25;
+    this.traffic[Direction.NUMBER.RL] = 15;
+    this.traffic[Direction.NUMBER.RR] = 5;
     
     // Taxas de sucesso, falha e adiamento, respectivamente
     // Deve totalizar 100%
     this.trafficRate = [0, 0, 0, 0];
-    this.trafficRate[Direction.LL] = [87.0, 0.5, 12.5];
-    this.trafficRate[Direction.LR] = [96.0, 1.5,  2.5];
-    this.trafficRate[Direction.RL] = [96.0, 3.0,  1.0];
-    this.trafficRate[Direction.RR] = [96.0, 1.0,  9.0];
+    this.trafficRate[Direction.NUMBER.LL] = [87.0, 0.5, 12.5];
+    this.trafficRate[Direction.NUMBER.LR] = [96.0, 1.5,  2.5];
+    this.trafficRate[Direction.NUMBER.RL] = [96.0, 3.0,  1.0];
+    this.trafficRate[Direction.NUMBER.RR] = [96.0, 1.0,  9.0];
     
     // Processamento das requisições
     this.processing = {
@@ -46,18 +43,42 @@ function Simulation() {
  */
 function Simulator() {
     "use strict";
+    var self = this;
+    
+    this.simulationTimer = undefined;
+    this.simulationTimeInterval = 500; // ms
     this.simulation = undefined;
+    this.receptionCenter = new ReceptionCenter();
+    this.localServiceCenter = new ServiceCenter(10);
+    this.remoteServiceCenter = new ServiceCenter(20);
+    this.simulationRunning = false;
     
     this.setSimulation = function(simulation) {
         this.simulation = simulation;  
     };
+    
+    this.runStep = function() { // Deve utilizar self para acessar o contexto por causa do timer
+        self.simulationRunning = true;
+        console.log("Passo executado!");
+    };
+    
     this.runSimulation = function() {
-        window.alert("Simulação iniciada!");
+        if(this.simulationRunning)
+            console.log("Simulação resumida!");
+        else
+            console.log("Simulação iniciada!");
+        
+        this.simulationTimer = setInterval(this.runStep, this.simulationTimeInterval);
     };
+    
     this.pauseSimulation = function() {
-        window.alert("Simulação pausada!");        
+        clearInterval(this.simulationTimer);
+        console.log("Simulação pausada!");
     };
+    
     this.stopSimulation = function() {
-        window.alert("Simulação parada!");
+        this.simulationRunning = false;
+        clearInterval(this.simulationTimer);
+        console.log("Simulação parada!");
     };
 }

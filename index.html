@@ -35,7 +35,7 @@
                 <img id="img_play" src="images/appbar.control.play.png" width="50px" />
                 <span class="tooltiptext">Iniciar/Pausar</span>
             </li>
-            <li>
+            <li onclick="stepSimulation()">
                 <img src="images/appbar.control.step.forward.png" width="50px" />
                 <span class="tooltiptext">Passo-a-Passo</span>
             </li>
@@ -78,32 +78,26 @@
                     </td>
                     <td>
                         <table border="0">
-                            <caption>Volume de Tráfego (%)</caption>
+                            <caption>Volume de Tráfego (%) Origem x Destino</caption>
                             <tr>
-                                <th style="text-align: left;">Direção</th>
-                                <th>Volume</th>
+                                <th>Origem</th>
+                                <th>Local</th>
+                                <th>Remoto</th>
                             </tr>
                             <tr>
-                                <td class="label_field">Local -> Local</td>
-                                <td><input class="input_field" type="number" id="field_trafficLL"></td>
+                                <td class="label_field">Local</td>
+                                <td><input class="input_field" type="number" min="0" step="0.01" id="field_trafficLL"></td>
+                                <td><input class="input_field" type="number" min="0" step="0.01" id="field_trafficLR"></td>
                             </tr>
                             <tr>
-                                <td class="label_field">Local -> Remoto</td>
-                                <td><input class="input_field" type="number" id="field_trafficLR"></td>
-                            </tr>
-                            <tr>
-                                <td class="label_field">Remoto -> Local</td>
-                                <td><input class="input_field" type="number" id="field_trafficRL"></td>
-                            </tr>
-                            <tr>
-                                <td class="label_field">Remoto -> Remoto</td>
-                                <td><input class="input_field" type="number" id="field_trafficRR"></td>
+                                <td class="label_field">Remoto</td>
+                                <td><input class="input_field" type="number" min="0" step="0.01" id="field_trafficRL"></td>
+                                <td><input class="input_field" type="number" min="0" step="0.01" id="field_trafficRR"></td>
                             </tr>
                         </table>
                     </td>
                 </tr>
-                
-                <br>
+                <tr style="height: 15px;"></tr>
                 <table border="0">
                     <caption>Proporção de Sucessos, Falhas e Adiamentos (%)</caption>
                     <tr>
@@ -114,27 +108,27 @@
                     </tr>
                     <tr>
                         <td class="label_field">Local -> Local</td>
-                        <td><input class="input_field" type="number" id="field_rateSuccessLL"></td>
-                        <td><input class="input_field" type="number" id="field_rateFailureLL"></td>
-                        <td><input class="input_field" type="number" id="field_ratePostponementLL"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateSuccessLL"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateFailureLL"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_ratePostponementLL"></td>
                     </tr>
                     <tr>
                         <td class="label_field">Local -> Remoto</td>
-                        <td><input class="input_field" type="number" id="field_rateSuccessLR"></td>
-                        <td><input class="input_field" type="number" id="field_rateFailureLR"></td>
-                        <td><input class="input_field" type="number" id="field_ratePostponementLR"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateSuccessLR"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateFailureLR"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_ratePostponementLR"></td>
                     </tr>
                     <tr>
                         <td class="label_field">Remoto -> Local</td>
-                        <td><input class="input_field" type="number" id="field_rateSuccessRL"></td>
-                        <td><input class="input_field" type="number" id="field_rateFailureRL"></td>
-                        <td><input class="input_field" type="number" id="field_ratePostponementRL"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateSuccessRL"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateFailureRL"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_ratePostponementRL"></td>
                     </tr>
                     <tr>
                         <td class="label_field">Remoto -> Remoto</td>
-                        <td><input class="input_field" type="number" id="field_rateSuccessRR"></td>
-                        <td><input class="input_field" type="number" id="field_rateFailureRR"></td>
-                        <td><input class="input_field" type="number" id="field_ratePostponementRR"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateSuccessRR"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateFailureRR"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_ratePostponementRR"></td>
                     </tr>
                 </table>
                 <br>
@@ -154,9 +148,9 @@
                                 <option value="UNIF" disabled>Uniforme</option>
                             </select>
                         </td>
-                        <td><input class="input_field" type="number" id="field_arrivalIntervalLocalParam1" disabled></td>
-                        <td><input class="input_field" type="number" id="field_arrivalIntervalLocalParam2" disabled></td>
-                        <td><input class="input_field" type="number" id="field_arrivalIntervalLocalParam3" disabled></td>                    
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalLocalParam1" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalLocalParam2" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalLocalParam3" disabled></td>                    
                     </tr>
                     <tr>
                         <td class="label_field">Remota</td>
@@ -168,9 +162,9 @@
                                 <option value="UNIF" disabled>Uniforme</option>
                             </select>
                         </td>
-                        <td><input class="input_field" type="number" id="field_arrivalIntervalRemoteParam1" disabled></td>
-                        <td><input class="input_field" type="number" id="field_arrivalIntervalRemoteParam2" disabled></td>
-                        <td><input class="input_field" type="number" id="field_arrivalIntervalRemoteParam3" disabled></td>                    
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalRemoteParam1" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalRemoteParam2" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalRemoteParam3" disabled></td>                    
                     </tr>
                 </table><br>
                 <table border="0">
@@ -182,123 +176,123 @@
                     </tr>
                     <tr>
                         <td class="label_field">LLS</td>
-                        <td><input class="input_field" type="number" id="field_procLLSReception"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLLSReception"></td>
                         <td>
                             <select id="field_procLLS" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
                         </td>
-                        <td><input class="input_field" type="number" id="field_procLLSParam1" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procLLSParam2" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procLLSParam3" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLLSParam1" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLLSParam2" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLLSParam3" disabled></td>
                     </tr>
                     <tr>
                         <td class="label_field">LLF</td>
-                        <td><input class="input_field" type="number" id="field_procLLFReception"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLLFReception"></td>
                         <td>
                             <select id="field_procLLF" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
                         </td>
-                        <td><input class="input_field" type="number" id="field_procLLFParam1" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procLLFParam2" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procLLFParam3" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLLFParam1" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLLFParam2" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLLFParam3" disabled></td>
                     </tr>
                     <tr>
                         <td class="label_field">LLA</td>
-                        <td><input class="input_field" type="number" id="field_procLLAReception"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLLAReception"></td>
                         <td>
                             <select id="field_procLLA" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
                         </td>
-                        <td><input class="input_field" type="number" id="field_procLLAParam1" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procLLAParam2" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procLLAParam3" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLLAParam1" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLLAParam2" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLLAParam3" disabled></td>
                     </tr>
                     <tr>
                         <td class="label_field">LRS</td>
-                        <td><input class="input_field" type="number" id="field_procLRSReception"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLRSReception"></td>
                         <td>
                             <select id="field_procLRS" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
                         </td>
-                        <td><input class="input_field" type="number" id="field_procLRSParam1" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procLRSParam2" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procLRSParam3" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLRSParam1" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLRSParam2" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLRSParam3" disabled></td>
                     </tr>
                     <tr>
                         <td class="label_field">LRF</td>
-                        <td><input class="input_field" type="number" id="field_procLRFReception"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLRFReception"></td>
                         <td>
                             <select id="field_procLRF" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
                         </td>
-                        <td><input class="input_field" type="number" id="field_procLRFParam1" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procLRFParam2" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procLRFParam3" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLRFParam1" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLRFParam2" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLRFParam3" disabled></td>
                     </tr>
                     <tr>
                         <td class="label_field">LRA</td>
-                        <td><input class="input_field" type="number" id="field_procLRAReception"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLRAReception"></td>
                         <td>
                             <select id="field_procLRA" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
                         </td>
-                        <td><input class="input_field" type="number" id="field_procLRAParam1" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procLRAParam2" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procLRAParam3" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLRAParam1" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLRAParam2" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procLRAParam3" disabled></td>
                     </tr>
                     <tr>
                         <td class="label_field">RLS</td>
-                        <td><input class="input_field" type="number" id="field_procRLSReception"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRLSReception"></td>
                         <td>
                             <select id="field_procRLS" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
                         </td>
-                        <td><input class="input_field" type="number" id="field_procRLSParam1" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procRLSParam2" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procRLSParam3" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRLSParam1" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRLSParam2" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRLSParam3" disabled></td>
                     </tr>
                     <tr>
                         <td class="label_field">RLF</td>
-                        <td><input class="input_field" type="number" id="field_procRLFReception"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRLFReception"></td>
                         <td>
                             <select id="field_procRLF" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
                         </td>
-                        <td><input class="input_field" type="number" id="field_procRLFParam1" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procRLFParam2" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procRLFParam3" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRLFParam1" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRLFParam2" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRLFParam3" disabled></td>
                     </tr>
                     <tr>
                         <td class="label_field">RLA</td>
-                        <td><input class="input_field" type="number" id="field_procRLAReception"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRLAReception"></td>
                         <td>
                             <select id="field_procRLA" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
                         </td>
-                        <td><input class="input_field" type="number" id="field_procRLAParam1" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procRLAParam2" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procRLAParam3" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRLAParam1" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRLAParam2" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRLAParam3" disabled></td>
                     </tr>
                     <tr>
                         <td class="label_field">RRS</td>
-                        <td><input class="input_field" type="number" id="field_procRRSReception"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRRSReception"></td>
                         <td>
                             <select id="field_procRRS" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
                         </td>
-                        <td><input class="input_field" type="number" id="field_procRRSParam1" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procRRSParam2" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procRRSParam3" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRRSParam1" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRRSParam2" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRRSParam3" disabled></td>
                     </tr>
                     <tr>
                         <td class="label_field">RRF</td>
-                        <td><input class="input_field" type="number" id="field_procRRFReception"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRRFReception"></td>
                         <td>
                             <select id="field_procRRF" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
                         </td>
-                        <td><input class="input_field" type="number" id="field_procRRFParam1" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procRRFParam2" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procRRFParam3" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRRFParam1" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRRFParam2" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRRFParam3" disabled></td>
                     </tr>
                     <tr>
                         <td class="label_field">RRA</td>
-                        <td><input class="input_field" type="number" id="field_procRRAReception"></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRRAReception"></td>
                         <td>
                             <select id="field_procRRA" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
                         </td>
-                        <td><input class="input_field" type="number" id="field_procRRAParam1" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procRRAParam2" disabled></td>
-                        <td><input class="input_field" type="number" id="field_procRRAParam3" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRRAParam1" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRRAParam2" disabled></td>
+                        <td><input class="input_field" type="number" min="0" step="0.01" id="field_procRRAParam3" disabled></td>
                     </tr>
                 </table>
             </table>
@@ -334,6 +328,7 @@
         loadFunctionOptions(document.getElementById("field_procRRA"));
         
         var simulation = new Simulation();
+        var simulator = new Simulator();
         loadDefaultSettings();
         
         function loadFunctionOptions(selectElement) {
@@ -382,10 +377,19 @@
             if(src.id == "btn_play") {
                 src.id = "btn_pause";
                 document.getElementById("img_play").setAttribute("src", "images/appbar.control.pause.png");
+                simulator.runSimulation();
             } else {
                 src.id = "btn_play";
                 document.getElementById("img_play").setAttribute("src", "images/appbar.control.play.png");
+                simulator.pauseSimulation();
             }
+        }
+        
+        function stepSimulation() {
+            console.log("Method call: stepSimulation()");
+            
+            simulator.pauseSimulation();
+            simulator.runStep();
         }
         
         function stopSimulation() {
@@ -393,6 +397,7 @@
             
             document.getElementById("img_play").setAttribute("src", "images/appbar.control.play.png");
             document.getElementById("img_play").parentElement.id = "btn_play";
+            simulator.stopSimulation();
         }
         
         function showHideBox(divId) {
@@ -426,8 +431,8 @@
             document.getElementById('field_simulationTime').value = simulation.simulationTime; 
             document.getElementById('field_simulationSeed').value = simulation.simulationSeed;          
             
-            document.getElementById('field_serversLocal').value = simulation.localServiceCenter.numberOfServers;
-            document.getElementById('field_serversRemote').value = simulation.remoteServiceCenter.numberOfServers;
+            document.getElementById('field_serversLocal').value = simulator.localServiceCenter.numberOfServers;
+            document.getElementById('field_serversRemote').value = simulator.remoteServiceCenter.numberOfServers;
             
             document.getElementById('field_trafficLL').value = simulation.traffic[Direction.NUMBER.LL];
             document.getElementById('field_trafficLR').value = simulation.traffic[Direction.NUMBER.LR];
