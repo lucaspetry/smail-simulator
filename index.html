@@ -92,11 +92,13 @@
                                 <th class="label_field">Origem Local</th>
                                 <td><input class="input_field" type="number" min="0" step="0.01" id="field_trafficLL"></td>
                                 <td><input class="input_field" type="number" min="0" step="0.01" id="field_trafficLR"></td>
+                                <td id="trafficSumL"> = 100%</td>
                             </tr>
                             <tr>
                                 <th class="label_field">Origem Remota</th>
                                 <td><input class="input_field" type="number" min="0" step="0.01" id="field_trafficRL"></td>
                                 <td><input class="input_field" type="number" min="0" step="0.01" id="field_trafficRR"></td>
+                                <td id="trafficSumR"> = 100%</td>
                             </tr>
                         </table>
                     </td>
@@ -116,24 +118,28 @@
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateSuccessLL"></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateFailureLL"></td>
                     <td style="text-align: center;"><input class="input_field" type="number" min="0" step="0.01" id="field_ratePostponementLL"></td>
+                    <td id="rateSumLL"> = 100%</td>
                 </tr>
                 <tr>
                     <td class="label_field">Local -> Remoto</td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateSuccessLR"></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateFailureLR"></td>
                     <td style="text-align: center;"><input class="input_field" type="number" min="0" step="0.01" id="field_ratePostponementLR"></td>
+                    <td id="rateSumLR"> = 100%</td>
                 </tr>
                 <tr>
                     <td class="label_field">Remoto -> Local</td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateSuccessRL"></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateFailureRL"></td>
                     <td style="text-align: center;"><input class="input_field" type="number" min="0" step="0.01" id="field_ratePostponementRL"></td>
+                    <td id="rateSumRL"> = 100%</td>
                 </tr>
                 <tr>
                     <td class="label_field">Remoto -> Remoto</td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateSuccessRR"></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_rateFailureRR"></td>
                     <td style="text-align: center;"><input class="input_field" type="number" min="0" step="0.01" id="field_ratePostponementRR"></td>
+                    <td id="rateSumRR"> = 100%</td>
                 </tr>
             </table>
             <br><br>
@@ -146,7 +152,7 @@
                 <tr>
                     <td class="label_field">Local</td>
                     <td>
-                        <select id="field_arrivalIntervalLocal" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_arrivalIntervalLocal" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalLocalParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalLocalParam2" disabled></td>
@@ -155,7 +161,7 @@
                 <tr>
                     <td class="label_field">Remota</td>
                     <td>
-                        <select id="field_arrivalIntervalRemote" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_arrivalIntervalRemote" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalRemoteParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalRemoteParam2" disabled></td>
@@ -172,7 +178,7 @@
                 <tr>
                     <td class="label_field">Local -> Local</td>
                     <td>
-                        <select id="field_receptionLL" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_receptionLL" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_receptionLLParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_receptionLLParam2" disabled></td>
@@ -181,7 +187,7 @@
                 <tr>
                     <td class="label_field">Local -> Remoto</td>
                     <td>
-                        <select id="field_receptionLR" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_receptionLR" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_receptionLRParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_receptionLRParam2" disabled></td>
@@ -190,7 +196,7 @@
                 <tr>
                     <td class="label_field">Remoto -> Local</td>
                     <td>
-                        <select id="field_receptionRL" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_receptionRL" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_receptionRLParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_receptionRLParam2" disabled></td>
@@ -199,7 +205,7 @@
                 <tr>
                     <td class="label_field">Remoto -> Remoto</td>
                     <td>
-                        <select id="field_receptionRR" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_receptionRR" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_receptionRRParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_receptionRRParam2" disabled></td>
@@ -216,7 +222,7 @@
                 <tr>
                     <td class="label_field">LLS</td>
                     <td>
-                        <select id="field_serviceLLS" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_serviceLLS" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceLLSParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceLLSParam2" disabled></td>
@@ -225,7 +231,7 @@
                 <tr>
                     <td class="label_field">LLF</td>
                     <td>
-                        <select id="field_serviceLLF" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_serviceLLF" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceLLFParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceLLFParam2" disabled></td>
@@ -234,7 +240,7 @@
                 <tr>
                     <td class="label_field">LLA</td>
                     <td>
-                        <select id="field_serviceLLA" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_serviceLLA" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceLLAParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceLLAParam2" disabled></td>
@@ -243,7 +249,7 @@
                 <tr>
                     <td class="label_field">LRS</td>
                     <td>
-                        <select id="field_serviceLRS" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_serviceLRS" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceLRSParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceLRSParam2" disabled></td>
@@ -252,7 +258,7 @@
                 <tr>
                     <td class="label_field">LRF</td>
                     <td>
-                        <select id="field_serviceLRF" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_serviceLRF" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceLRFParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceLRFParam2" disabled></td>
@@ -261,7 +267,7 @@
                 <tr>
                     <td class="label_field">LRA</td>
                     <td>
-                        <select id="field_serviceLRA" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_serviceLRA" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceLRAParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceLRAParam2" disabled></td>
@@ -270,7 +276,7 @@
                 <tr>
                     <td class="label_field">RLS</td>
                     <td>
-                        <select id="field_serviceRLS" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_serviceRLS" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceRLSParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceRLSParam2" disabled></td>
@@ -279,7 +285,7 @@
                 <tr>
                     <td class="label_field">RLF</td>
                     <td>
-                        <select id="field_serviceRLF" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_serviceRLF" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceRLFParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceRLFParam2" disabled></td>
@@ -288,7 +294,7 @@
                 <tr>
                     <td class="label_field">RLA</td>
                     <td>
-                        <select id="field_serviceRLA" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_serviceRLA" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceRLAParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceRLAParam2" disabled></td>
@@ -297,7 +303,7 @@
                 <tr>
                     <td class="label_field">RRS</td>
                     <td>
-                        <select id="field_serviceRRS" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_serviceRRS" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceRRSParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceRRSParam2" disabled></td>
@@ -306,7 +312,7 @@
                 <tr>
                     <td class="label_field">RRF</td>
                     <td>
-                        <select id="field_serviceRRF" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_serviceRRF" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceRRFParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceRRFParam2" disabled></td>
@@ -315,7 +321,7 @@
                 <tr>
                     <td class="label_field">RRA</td>
                     <td>
-                        <select id="field_serviceRRA" style="width: 100px;" onchange="updateFunctionParams(this)"></select>
+                        <select id="field_serviceRRA" style="width: 130px;" onchange="updateFunctionParams(this)"></select>
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceRRAParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_serviceRRAParam2" disabled></td>
@@ -471,7 +477,23 @@
             
             document.getElementById('field_serversLocal').value = simulator.localServiceCenter.numberOfServers;
             document.getElementById('field_serversRemote').value = simulator.remoteServiceCenter.numberOfServers;
-                        
+            
+            document.getElementById('field_arrivalIntervalLocal' + Function.INDEX[Function.NUMBER.EXPONENCIAL]).selected = true;
+            document.getElementById('field_arrivalIntervalLocal' + Function.INDEX[Function.NUMBER.CONSTANT]).disabled = true;
+            document.getElementById('field_arrivalIntervalLocal' + Function.INDEX[Function.NUMBER.UNIFORM]).disabled = true;
+            document.getElementById('field_arrivalIntervalLocal' + Function.INDEX[Function.NUMBER.NORMAL]).disabled = true;
+            document.getElementById('field_arrivalIntervalLocal' + Function.INDEX[Function.NUMBER.TRIANGULAR]).disabled = true;
+            document.getElementById('field_arrivalIntervalLocalParam1').value = simulation.arrivalIntervalLocal[1];
+            document.getElementById('field_arrivalIntervalLocalParam1').disabled = false;
+            
+            document.getElementById('field_arrivalIntervalRemote' + Function.INDEX[Function.NUMBER.EXPONENCIAL]).selected = true;
+            document.getElementById('field_arrivalIntervalRemote' + Function.INDEX[Function.NUMBER.CONSTANT]).disabled = true;
+            document.getElementById('field_arrivalIntervalRemote' + Function.INDEX[Function.NUMBER.UNIFORM]).disabled = true;
+            document.getElementById('field_arrivalIntervalRemote' + Function.INDEX[Function.NUMBER.NORMAL]).disabled = true;
+            document.getElementById('field_arrivalIntervalRemote' + Function.INDEX[Function.NUMBER.TRIANGULAR]).disabled = true;
+            document.getElementById('field_arrivalIntervalRemoteParam1').value = simulation.arrivalIntervalRemote[1];
+            document.getElementById('field_arrivalIntervalRemoteParam1').disabled = false;
+                                    
             for(i = 0; i < Direction.SIZE; i++) {
                 // Volume de tráfego
                 document.getElementById('field_traffic' + Direction.INDEX[i]).value = simulation.traffic[i];
@@ -488,6 +510,7 @@
                 document.getElementById('field_reception' + Direction.INDEX[i] + Function.INDEX[Function.NUMBER.NORMAL]).disabled = true;
                 document.getElementById('field_reception' + Direction.INDEX[i] + Function.INDEX[Function.NUMBER.TRIANGULAR]).disabled = true;
                 document.getElementById('field_reception' + Direction.INDEX[i] + "Param1").value = simulation.receptionTime[i];
+                document.getElementById('field_reception' + Direction.INDEX[i] + "Param1").disabled = false;
                 
                 // Tempos de serviço
                 for(j = 0; j < Status.SIZE; j++) {

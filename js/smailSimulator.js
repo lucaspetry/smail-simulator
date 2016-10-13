@@ -22,6 +22,10 @@ function Simulation() {
     this.trafficRate[Direction.NUMBER.RL] = [96.0, 3.0,  1.0];
     this.trafficRate[Direction.NUMBER.RR] = [96.0, 1.0,  9.0];
     
+    // Tempo entre chegadas de mensagens
+    this.arrivalIntervalLocal = [Function.NUMBER.EXPONENCIAL, 0.5, 0, 0];
+    this.arrivalIntervalRemote = [Function.NUMBER.EXPONENCIAL, 0.6, 0, 0];
+    
     // Tempo de recepção de acordo com a direção
     this.receptionTime = [0, 0, 0, 0];
     this.receptionTime[Direction.NUMBER.LL] = 0.12;
