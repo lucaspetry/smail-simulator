@@ -1,3 +1,8 @@
+/*========================================
+ * Requires:  enums.js
+ *            operationCenter.js
+ *=======================================*/
+
 /**
  * Construtor de uma simulação
  */
@@ -59,16 +64,12 @@ function Simulator() {
     
     this.simulationTimer = undefined;
     this.simulationTimeInterval = 500; // ms
-    this.simulation = undefined;
+    this.simulation = new Simulation(); // Simulação padrão
     this.receptionCenter = new ReceptionCenter();
     this.localServiceCenter = new ServiceCenter(10);
     this.remoteServiceCenter = new ServiceCenter(20);
     this.simulationRunning = false;
-    
-    this.setSimulation = function(simulation) {
-        this.simulation = simulation;  
-    };
-    
+        
     this.runStep = function() { // Deve utilizar self para acessar o contexto por causa do timer
         self.simulationRunning = true;
         console.log("Passo executado!");
