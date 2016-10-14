@@ -12,12 +12,22 @@ body {
 }
 
 #main_box {
-    background-color: white;
+    background-color: transparent;
     position: absolute;
+    margin-top: 10px;
     margin-left: 25%;
-    width: 50%;
+    width: 1000px;
     height: 100%;
-    padding: 7px;
+}
+
+.box_default {
+    background-color: white;
+    border-color: #E3E0D8;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    margin-bottom: 2px;
+    padding: 5px;
 }
 
 #black_box {
