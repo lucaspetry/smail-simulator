@@ -1,9 +1,9 @@
 function dashboard(id, fData){
     var barColor = 'steelblue';
-    function segColor(c){ return {low:"#807dba", mid:"#e08214",high:"#41ab5d"}[c]; }
+    function segColor(c){ return {Sucesso:"#807dba", Falha:"#e08214",Adiamento:"#41ab5d"}[c]; }
     
     // compute total for each state.
-    fData.forEach(function(d){d.total=d.freq.low+d.freq.mid+d.freq.high;});
+    fData.forEach(function(d){d.total=d.freq.Sucesso+d.freq.Falha+d.freq.Adiamento;});
     
     // function to handle histogram.
     function histoGram(fD){
@@ -51,6 +51,9 @@ function dashboard(id, fData){
             .attr("text-anchor", "middle");
         
         function mouseover(d){  // utility function to be called on mouseover.
+            if(simulator.simulationRunning)
+                return;
+            
             // filter for selected state.
             var st = fData.filter(function(s){ return s.State == d[0];})[0],
                 nD = d3.keys(st.freq).map(function(s){ return {type:s, freq:st.freq[s]};});
@@ -61,6 +64,9 @@ function dashboard(id, fData){
         }
         
         function mouseout(d){    // utility function to be called on mouseout.
+            if(simulator.simulationRunning)
+                return;
+            
             // reset the pie-chart and legend.    
             pC.update(tF);
             leg.update(tF);
@@ -117,12 +123,18 @@ function dashboard(id, fData){
         }        
         // Utility function to be called on mouseover a pie slice.
         function mouseover(d){
+            if(simulator.simulationRunning)
+                return;
+            
             // call the update function of histogram with new data.
             hG.update(fData.map(function(v){ 
                 return [v.State,v.freq[d.data.type]];}),segColor(d.data.type));
         }
         //Utility function to be called on mouseout a pie slice.
         function mouseout(d){
+            if(simulator.simulationRunning)
+                return;
+            
             // call the update function of histogram with all data.
             hG.update(fData.map(function(v){
                 return [v.State,v.total];}), barColor);
@@ -183,7 +195,7 @@ function dashboard(id, fData){
     }
     
     // calculate total frequency by segment for all state.
-    var tF = ['low','mid','high'].map(function(d){ 
+    var tF = ['Sucesso', 'Falha', 'Adiamento'].map(function(d){ 
         return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))}; 
     });    
     

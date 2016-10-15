@@ -68,28 +68,32 @@ function Simulator() {
     this.receptionCenter = new ReceptionCenter();
     this.localServiceCenter = new ServiceCenter(10);
     this.remoteServiceCenter = new ServiceCenter(20);
+    this.simulationInProgress = false;
     this.simulationRunning = false;
-        
+    
     this.runStep = function() { // Deve utilizar self para acessar o contexto por causa do timer
-        self.simulationRunning = true;
+        self.simulationInProgress = true;
         console.log("Passo executado!");
     };
     
     this.runSimulation = function() {
-        if(this.simulationRunning)
+        if(this.simulationInProgress)
             console.log("Simulação resumida!");
         else
             console.log("Simulação iniciada!");
         
+        this.simulationRunning = true;
         this.simulationTimer = setInterval(this.runStep, this.simulationTimeInterval);
     };
     
     this.pauseSimulation = function() {
+        this.simulationRunning = false;
         clearInterval(this.simulationTimer);
         console.log("Simulação pausada!");
     };
     
     this.stopSimulation = function() {
+        this.simulationInProgress = false;
         this.simulationRunning = false;
         clearInterval(this.simulationTimer);
         console.log("Simulação parada!");
