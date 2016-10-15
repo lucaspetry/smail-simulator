@@ -129,10 +129,12 @@ function showHideBox(divId) {
       || document.getElementById('settings_box').style.visibility == 'visible'
       || document.getElementById('time_settings_box').style.visibility == 'visible') {
         document.getElementById('black_box').style.visibility = 'visible';
-        document.getElementById('black_box').style.opacity = 0.7;                
+        document.getElementById('black_box').style.opacity = 0.7;
+        document.body.style.overflowY = 'hidden';
     } else {
         document.getElementById('black_box').style.opacity = 0;
         document.getElementById('black_box').style.visibility = 'hidden';
+        document.body.style.overflowY = 'scroll';
     }
 }
 
