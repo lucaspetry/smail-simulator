@@ -94,6 +94,20 @@ function stopSimulation() {
 }
 
 /**
+ * Gerar o relatório da simulação
+ */
+function simulationReport() {
+    console.log("Method call: simulationReport()");
+        
+    var blob = new Blob(["Simulation Report\n\nComing soon!"], {type: "text/plain;charset=utf-8"});
+    var currentdate = new Date();
+    var datetime = currentdate.getFullYear() + "" + (currentdate.getMonth()+1) + "" + currentdate.getDate() + "@"
+                + currentdate.getHours() + "" + currentdate.getMinutes() + "" + currentdate.getSeconds();
+    
+    saveAs(blob, "smail_report_" + datetime + ".txt");
+}
+
+/**
  * Exibir/esconder uma janela flutuante
  * @param divId identificador do elemento a ser exibido/escondido
  */

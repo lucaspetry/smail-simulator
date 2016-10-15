@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/menu.css">
     
+    <script src="js/d3.min.js"></script>
+    <script src="js/fileSaver.min.js"></script>
     <script src="js/enums.js"></script>
     <script src="js/operationCenter.js"></script>
     <script src="js/smailSimulator.js"></script>
@@ -18,6 +20,7 @@
 </head>
 
 <body>
+    <div id="black_box"></div>
     <div id="menu">
         <ul>
             <li onclick="showHideBox('about_box')">
@@ -44,72 +47,13 @@
                 <img src="images/appbar.control.stop.png" width="50px" />
                 <span class="tooltiptext">Parar</span>
             </li>
+            <li onclick="simulationReport()">
+                <img src="images/appbar.page.powerpoint.png" width="50px" />
+                <span class="tooltiptext">Relatório da Simulação</span>
+            </li>
         </ul> 
     </div>
     
-    <div id="main_box">
-        <table border="0" style="border-collapse: collapse; height: 100%;">
-            <tr>
-                <div class="box_default" style="text-align: center; height: 50px; width: 888px; cursor: default;"><h2>Smail: Simulador de Servidores de E-mails</h2></div>
-            </tr>
-            <tr>
-                <td>
-                    <div class="box_default" style="text-align: center; height: 50px; width: 300px; margin-right: 2px;">0:00</div>
-                </td>
-                <td>
-                    <div class="box_default" style="text-align: center; height: 50px; width: 572px">1</div>
-                </td>
-            </tr>
-            <tr>
-                <td rowspan="2" style="vertical-align: top;">
-                    <div class="box_default" style="text-align: center; height: 100%; width: 300px;">
-                        <span style="font-weight: bold; font-size: 1.3em;">Próximos Eventos</span>
-                        <table id="events_table" border="0" style="border-collapse: collapse; width: inherit; margin-top: 10px">
-                            <tr>
-                                <th style="width: 30px;">#</th>
-                                <th style="width: 100px;">TEC</th>
-                                <th style="text-align: center;">Origem do Evento</th>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>3.2</td>
-                                <td>Local</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>4</td>
-                                <td>Local</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>8.2</td>
-                                <td>Remota</td>
-                            </tr>
-                        </table>
-                    
-                    </div>
-                </td>
-                <td border="0">
-                    <div class="box_default" style="text-align: center; height: 300px;">
-                        <b>Stats:</b><br>
-                        - Quadriculado com servidores ocupados<br>
-                        <a href="https://github.com/hkelly93/d3-relationshipgraph">---- Opção 1</a><br>
-                        <a href="http://bl.ocks.org/oyyd/859fafc8122977a3afd6">---- Opção 2</a><br>
-                        <a href="http://bl.ocks.org/tjdecke/5558084">---- Opção 3</a><br>
-                        <a href="http://bl.ocks.org/NPashaP/96447623ef4d342ee09b">- Dashboard: barras (sucesso/falha/adiamento) e pizza (LL/LR/RL/RR)</a><br>
-                        <a href="http://dataaddict.fr/prenoms/#alain">- Linhas com média tempo de serviço e recepção</a><br>
-                    
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td><div class="box_default" style="text-align: center; height: 200px;">3</div></td>
-            </tr>
-        </table>
-        
-    </div>
-    
-    <div id="black_box"></div>
     <div id="about_box">Sobre</div>
     <div id="settings_box">
         <h2 style="color: black;">Parâmetros de Simulação</h2>
@@ -401,6 +345,68 @@
                 <td><input class="input_field" type="number" min="1" max="10" id="field_simulationSpeed"></td>
             </tr>
         </table>
+    </div>
+    
+    <div id="main_box">
+        <table border="0" style="border-collapse: collapse; height: 100%;">
+            <tr>
+                <div class="box_default" style="text-align: center; height: 50px; width: 888px; cursor: default;"><h2>Smail: Simulador de Servidores de E-mails</h2></div>
+            </tr>
+            <tr>
+                <td>
+                    <div class="box_default" style="text-align: center; height: 50px; width: 300px; margin-right: 2px;">0:00</div>
+                </td>
+                <td>
+                    <div class="box_default" style="text-align: center; height: 50px; width: 572px">1</div>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2" style="vertical-align: top;">
+                    <div class="box_default" style="text-align: center; height: 100%; width: 300px;">
+                        <span style="font-weight: bold; font-size: 1.3em;">Próximos Eventos</span>
+                        <table id="events_table" border="0" style="border-collapse: collapse; width: inherit; margin-top: 10px">
+                            <tr>
+                                <th style="width: 30px;">#</th>
+                                <th style="width: 100px;">TEC</th>
+                                <th style="text-align: center;">Origem do Evento</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>3.2</td>
+                                <td>Local</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>4</td>
+                                <td>Local</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>8.2</td>
+                                <td>Remota</td>
+                            </tr>
+                        </table>
+                    
+                    </div>
+                </td>
+                <td border="0">
+                    <div class="box_default" style="text-align: center; height: 300px;">
+                        <b>Stats:</b><br>
+                        - Quadriculado com servidores ocupados<br>
+                        <a href="https://github.com/hkelly93/d3-relationshipgraph">---- Opção 1</a><br>
+                        <a href="http://bl.ocks.org/oyyd/859fafc8122977a3afd6">---- Opção 2</a><br>
+                        <a href="http://bl.ocks.org/tjdecke/5558084">---- Opção 3</a><br>
+                        <a href="http://bl.ocks.org/NPashaP/96447623ef4d342ee09b">- Dashboard: barras (sucesso/falha/adiamento) e pizza (LL/LR/RL/RR)</a><br>
+                        <a href="http://dataaddict.fr/prenoms/#alain">- Linhas com média tempo de serviço e recepção</a><br>
+                    
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><div class="box_default" style="text-align: center; height: 200px;">3</div></td>
+            </tr>
+        </table>
+        
     </div>
 
     <script>
