@@ -1,22 +1,23 @@
 <!doctype html>
 <html lang="pt-br">
-    
+
 <head>
     <meta charset="utf-8">
     <meta name="description" content="Smail: Simulator">
     <meta name="author" content="Lucas May Petry">
-    
+
     <title>Smail: Simulador</title>
-    
+
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/menu.css">
-    
+
     <script src="js/d3.min.js"></script>
     <script src="js/fileSaver.min.js"></script>
     <script src="js/enums.js"></script>
     <script src="js/operationCenter.js"></script>
     <script src="js/smailSimulator.js"></script>
     <script src="js/interface.js"></script>
+    <script src="js/collections/collections.min.js"></script>
 </head>
 
 <body>
@@ -51,9 +52,9 @@
                 <span class="tooltiptext">Relatório da Simulação</span>
                 <img src="images/appbar.page.powerpoint.png" width="50px" />
             </li>
-        </ul> 
+        </ul>
     </div>
-    
+
     <div id="about_box">
         Simulador de um servidor de e-mails,
         desenvolvido para a disciplina de Modelagem e Simulação (INE5425) do
@@ -158,7 +159,7 @@
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalLocalParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalLocalParam2" disabled></td>
-                    <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalLocalParam3" disabled></td>                    
+                    <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalLocalParam3" disabled></td>
                 </tr>
                 <tr>
                     <td class="label_field">Remota</td>
@@ -167,7 +168,7 @@
                     </td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalRemoteParam1" disabled></td>
                     <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalRemoteParam2" disabled></td>
-                    <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalRemoteParam3" disabled></td>                    
+                    <td><input class="input_field" type="number" min="0" step="0.01" id="field_arrivalIntervalRemoteParam3" disabled></td>
                 </tr>
             </table>
             <br><br>
@@ -332,7 +333,7 @@
             </table>
         </div>
     </div>
-    
+
     <div id="time_settings_box">
         <table border="0">
             <tr>
@@ -350,7 +351,7 @@
             </tr>
         </table>
     </div>
-    
+
     <div id="main_box">
         <table border="0" style="border-collapse: collapse; height: 100%;">
             <tr>
@@ -390,7 +391,7 @@
                                 <td>Remota</td>
                             </tr>
                         </table>
-                    
+
                     </div>
                 </td>
                 <td border="0">
@@ -402,7 +403,7 @@
                         <a href="http://bl.ocks.org/tjdecke/5558084">---- Opção 3</a><br>
                         <a href="http://bl.ocks.org/NPashaP/96447623ef4d342ee09b">- Dashboard: barras (sucesso/falha/adiamento) e pizza (LL/LR/RL/RR)</a><br>
                         <a href="http://dataaddict.fr/prenoms/#alain">- Linhas com média tempo de serviço e recepção</a><br>
-                    
+
                     </div>
                 </td>
             </tr>
@@ -410,16 +411,16 @@
                 <td><div class="box_default" style="text-align: center; height: 200px;">3</div></td>
             </tr>
         </table>
-        
+
     </div>
 
     <script>
         // Cria um novo simulador
         var simulator = new Simulator();
-        
+
         // Carrega as configurações padrão na interface
         loadDefaultSettings();
     </script>
 </body>
-    
+
 </html>
