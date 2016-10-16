@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/menu.css">
 
     <script src="js/d3.min.js"></script>
+    <script src="js/chart.dashboard.js"></script>
     <script src="js/fileSaver.min.js"></script>
     <script src="js/enums.js"></script>
     <script src="js/operationCenter.js"></script>
@@ -408,7 +409,43 @@
                 </td>
             </tr>
             <tr>
-                <td><div class="box_default" style="text-align: center; height: 200px;">3</div></td>
+                <td>
+                    <style>
+                    path {  stroke: #fff; }
+                    path:hover {  opacity:0.9; }
+                    rect:hover {  fill:blue; }
+                    .axis {  font: 10px sans-serif; }
+                    .legend tr{    border-bottom:1px solid grey; }
+                    .legend tr:first-child{    border-top:1px solid grey; }
+
+                    .axis path,
+                    .axis line {
+                      fill: none;
+                      stroke: #000;
+                      shape-rendering: crispEdges;
+                    }
+
+                    .x.axis path {  display: none; }
+                    .legend{
+                        margin-bottom:76px;
+                        display:inline-block;
+                        border-collapse: collapse;
+                        border-spacing: 0px;
+                    }
+                    .legend td{
+                        padding:4px 5px;
+                        vertical-align:bottom;
+                    }
+                    .legendFreq, .legendPerc{
+                        align:right;
+                        width:50px;
+                    }
+
+                    </style>
+                    <div class="box_default" style="text-align: center; height: auto;">
+                        <div id="dashboard"></div>
+                    </div>
+                </td>
             </tr>
         </table>
 
@@ -420,6 +457,16 @@
 
         // Carrega as configurações padrão na interface
         loadDefaultSettings();
+        
+        // Gráfico exemplo
+        var freqData=[
+            {State:'LL',freq:{Sucesso:4786, Falha:1319, Adiamento:249}}
+            ,{State:'LR',freq:{Sucesso:1101, Falha:412, Adiamento:674}}
+            ,{State:'RL',freq:{Sucesso:932, Falha:2149, Adiamento:418}}
+            ,{State:'RR',freq:{Sucesso:832, Falha:1152, Adiamento:1862}}
+            ];
+
+        dashboard('#dashboard', freqData);
     </script>
 </body>
 

@@ -118,9 +118,12 @@ function ArrivalServiceCenterEvent(lef, time, funct, serviceCenter) {
     this.serviceCenter = serviceCenter;
 
     this.execute = function(){
+      //verifica o tipo de saida e toma as atitudes necessarias, exemplo adiamento precisa criar um evento de chegada no centro servico
+
       if(this.serviceCenter.queue.length != 0){
         this.serviceCenter.queue.shift();
         // verifica qual vai ser a saida do evento, sucesso, falha, adiamento, e então cria o evento de saida
+        //precisa atualizar o tempo que ficou na fila
         lef.push(new OutServiceCenterEvent(this.lef, this.time + 50, this.funct, this.serviceCenter));
       }
         this.serviceCenter.numMessagesIn--;
