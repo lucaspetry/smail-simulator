@@ -63,16 +63,16 @@ function ArrivalReceptionCenterEvent(lef, time, funct, receptionCenter, serviceC
   this.serviceCenterLocal = serviceCenterLocal;
   this.serviceCenterRemote = serviceCenterRemote;
 
-    this.execute = function(){
-        if(this.receptionCenter.queue.length == 0){
-          lef.push(new OutReceptionCenterEvent(this.lef, this.time + 50, this.funct, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
-        }else{
-          this.receptionCenter.queue.push(this);
-        }
-        this.receptionCenter.totalMessages++;
-        this.receptionCenter.numMessagesIn++;
-        lef.push(new ArrivalReceptionCenterEvent(this.lef, this.time + 50, this.funct, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
-    };
+  this.execute = function(){
+      if(this.receptionCenter.queue.length == 0){
+        lef.push(new OutReceptionCenterEvent(this.lef, this.time + 50, this.funct, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
+      }else{
+        this.receptionCenter.queue.push(this);
+      }
+      this.receptionCenter.totalMessages++;
+      this.receptionCenter.numMessagesIn++;
+      lef.push(new ArrivalReceptionCenterEvent(this.lef, this.time + 50, this.funct, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
+  };
 }
 
   function OutReceptionCenterEvent(lef, time, funct, receptionCenter, serviceCenterLocal, serviceCenterRemote) {
@@ -186,6 +186,8 @@ function Simulator() {
           this.timeAdvanceRoutine();
           this.nextEvent.execute();
         }
+        this.computeFinalStatistics();
+        this.generateReport();
     };
 
     this.initializeRoutine = function() {
@@ -202,5 +204,13 @@ function Simulator() {
     this.timeAdvanceRoutine = function() {
         this.nextEvent = this.lef.shift();
         this.simulationTimer += this.nextEvent.time;
+    };
+
+    this.computeFinalStatistics = function() {
+
+    };
+
+    this.generateReport = function() {
+
     };
 }
