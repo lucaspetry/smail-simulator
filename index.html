@@ -409,7 +409,6 @@
                                 <td>Remota</td>
                             </tr>
                         </table>
-
                     </div>
                 </td>
                 <td border="0">
@@ -484,6 +483,25 @@
             ];
 
         dashboard('#dashboard', freqData);
+        
+        function updateDashboard() {
+            var freqData2=[
+                {State:'LL',freq:{Sucesso:Math.random()*100, Falha:1319, Adiamento:Math.random()*100}}
+                ,{State:'LR',freq:{Sucesso:1101, Falha:412, Adiamento:674}}
+                ,{State:'RL',freq:{Sucesso:932, Falha:Math.random()*1000, Adiamento:418}}
+                ,{State:'RR',freq:{Sucesso:832, Falha:1152, Adiamento:Math.random()*100}}
+                ];
+            
+            freqData2.forEach(function(d){d.total=d.freq.Sucesso+d.freq.Falha+d.freq.Adiamento;});
+            var temp = ['Sucesso', 'Falha', 'Adiamento'].map(function(d){ 
+            return {type:d, freq: d3.sum(freqData2.map(function(t){ return t.freq[d];}))}; 
+            });    
+            
+            pC.update(temp);
+            leg.update(temp);
+            hG.update(freqData2.map(function(v){
+                return [v.State,v.total];}), barColor);
+        }
     </script>
 </body>
 

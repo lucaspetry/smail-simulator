@@ -61,6 +61,13 @@ function Simulation() {
 }
 
 /**
+ * Estatísticas da simulação
+ */
+function Statistics() {
+    
+}
+
+/**
  * Evento de chegada de mensagem no centro de recepção
  */
 function ArrivalReceptionCenterEvent(nextEventsList, time, receptionCenter, serviceCenterLocal, serviceCenterRemote) {

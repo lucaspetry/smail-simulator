@@ -1,6 +1,10 @@
+
+var barColor = 'steelblue';
+function segColor(c){ return { Sucesso:"#807dba", Falha:"#e08214", Adiamento:"#41ab5d" }[c]; }
+
+var hG, pC, leg;
+
 function dashboard(id, fData){
-    var barColor = 'steelblue';
-    function segColor(c){ return {Sucesso:"#807dba", Falha:"#e08214",Adiamento:"#41ab5d"}[c]; }
     
     // compute total for each state.
     fData.forEach(function(d){d.total=d.freq.Sucesso+d.freq.Falha+d.freq.Adiamento;});
@@ -8,7 +12,7 @@ function dashboard(id, fData){
     // function to handle histogram.
     function histoGram(fD){
         var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};
-        hGDim.w = 500 - hGDim.l - hGDim.r, 
+        hGDim.w = 200 - hGDim.l - hGDim.r, 
         hGDim.h = 300 - hGDim.t - hGDim.b;
             
         //create svg for histogram.
@@ -71,7 +75,7 @@ function dashboard(id, fData){
             pC.update(tF);
             leg.update(tF);
         }
-        
+                
         // create function to update the bars. This will be used by pie-chart.
         hG.update = function(nD, color){
             // update the domain of the y-axis map to reflect change in frequencies.
@@ -202,7 +206,7 @@ function dashboard(id, fData){
     // calculate total frequency by state for all segment.
     var sF = fData.map(function(d){return [d.State,d.total];});
 
-    var hG = histoGram(sF), // create the histogram.
-        pC = pieChart(tF), // create the pie-chart.
-        leg= legend(tF);  // create the legend.
+    hG = histoGram(sF); // create the histogram.
+    pC = pieChart(tF); // create the pie-chart.
+    leg= legend(tF);  // create the legend.
 }
