@@ -198,7 +198,7 @@ function Simulator() {
      */
     this.runStep = function() { // Deve utilizar self para acessar o contexto por causa do timer
         console.log("Simulação: passo executado.");
-        self.simulationRunning = true;
+        self.simulationInProgress = true;
         
         // Se simulação não terminou, consome próximo evento
         if(self.nextEvent.time <= self.simulation.simulationTime) {
@@ -207,6 +207,9 @@ function Simulator() {
         } else { // Senão, para simulação/gera estatísticas
             self.stopSimulation();
         }
+        
+        // Atualiza a interface
+        updateInterface();
     };
 
     /**
@@ -290,7 +293,7 @@ function Simulator() {
     this.computeFinalStatistics = function() {
         
     };
-    
+
 //    this.mainRoutine = function() {
 //        this.initializeRoutine();
 //

@@ -221,3 +221,9 @@ function loadDefaultSettings() {
         }
     }
 }
+
+function updateInterface() {
+    console.log("Method call: updateInterface()");
+    
+    document.getElementById('simulation_currentTime').innerHTML = simulator.simulationCurrentTime;
+}
