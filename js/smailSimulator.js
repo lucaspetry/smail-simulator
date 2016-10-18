@@ -4,13 +4,18 @@
  *=======================================*/
 
 /**
- * Construtor de uma simulação
+ * Configurações da simulação
  */
 function Simulation() {
     "use strict";
+    // Parâmetros básicos de execução
     this.simulationTime = 500;
     this.simulationSeed = 11;
     this.simulationSpeed = 5;
+    
+    // Número de servidores nos centros de serviço
+    this.localServiceCenterServers = 10;
+    this.remoteServiceCenterServers = 20;
 
     // Volume de tráfego
     this.traffic = [0, 0, 0, 0];
@@ -55,162 +60,246 @@ function Simulation() {
     };
 }
 
-function ArrivalReceptionCenterEvent(lef, time, funct, receptionCenter, serviceCenterLocal, serviceCenterRemote){
-  this.lef = lef;
-  this.time = time;
-  this.funct = funct;
-  this.receptionCenter = receptionCenter;
-  this.serviceCenterLocal = serviceCenterLocal;
-  this.serviceCenterRemote = serviceCenterRemote;
+/**
+ * Evento de chegada de mensagem no centro de recepção
+ */
+function ArrivalReceptionCenterEvent(nextEventsList, time, receptionCenter, serviceCenterLocal, serviceCenterRemote) {
+    this.nextEventsList = nextEventsList;
+    this.time = time;
+    this.receptionCenter = receptionCenter;
+    this.serviceCenterLocal = serviceCenterLocal;
+    this.serviceCenterRemote = serviceCenterRemote;
 
-  this.execute = function(){
-      if(this.receptionCenter.queue.length == 0){
-        lef.push(new OutReceptionCenterEvent(this.lef, this.time + 50, this.funct, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
-      }else{
-        this.receptionCenter.queue.push(this);
-      }
-      this.receptionCenter.totalMessages++;
-      this.receptionCenter.numMessagesIn++;
-      lef.push(new ArrivalReceptionCenterEvent(this.lef, this.time + 50, this.funct, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
-  };
+    this.execute = function() {
+        if(this.receptionCenter.queue.length == 0) {
+            this.nextEventsList.push(new OutReceptionCenterEvent(this.nextEventsList, this.time + 50, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
+        } else {
+            this.receptionCenter.queue.push(this);
+        }
+        this.receptionCenter.totalMessages++;
+        this.receptionCenter.numMessagesIn++;
+        this.nextEventsList.push(new ArrivalReceptionCenterEvent(this.nextEventsList, this.time + 50, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
+    };
 }
 
-  function OutReceptionCenterEvent(lef, time, funct, receptionCenter, serviceCenterLocal, serviceCenterRemote) {
-    this.lef = lef;
+/**
+ * Evento de saída de mensagem do centro de recepção
+ */
+function OutReceptionCenterEvent(nextEventsList, time, receptionCenter, serviceCenterLocal, serviceCenterRemote) {
+    this.nextEventsList = nextEventsList;
     this.time = time;
-    this.funct = funct;
     this.receptionCenter = receptionCenter;
     this.serviceCenterLocal = serviceCenterLocal;
     this.serviceCenterRemote = serviceCenterRemote;
 
     this.execute = function(){
         this.receptionCenter.numMessagesIn--;
-        lef.push(new ArrivalServiceCenterEvent(this.lef, this.time + 50, this.funct, this.serviceCenterLocal));
-        if(this.receptionCenter.queue.length != 0){
-          queueEvent = this.receptionCenter.queue.shift(); //time \/ vai ser o tempo de saida do evento atual + tempo gerado pela funcao
-          lef.push(new OutReceptionCenterEvent(this.lef, this.time + 50, this.funct, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
+        this.nextEventsList.push(new ArrivalServiceCenterEvent(this.nextEventsList, this.time + 50, this.serviceCenterLocal));
+        if(this.receptionCenter.queue.length != 0) {
+            queueEvent = this.receptionCenter.queue.shift(); //time \/ vai ser o tempo de saida do evento atual + tempo gerado pela funcao
+            this.nextEventsList.push(new OutReceptionCenterEvent(this.nextEventsList, this.time + 50, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
         }
     };
 }
 
-function ArrivalServiceCenterEvent(lef, time, funct, serviceCenter) {
-    this.lef = lef;
+/**
+ * Evento de chegada de mensagem no centro de serviço
+ */
+function ArrivalServiceCenterEvent(nextEventsList, time, serviceCenter) {
+    this.nextEventsList = nextEventsList;
     this.time = time;
-    this.funct = funct;
     this.serviceCenter = serviceCenter;
 
-    this.execute = function(){
+    this.execute = function() {
         this.serviceCenter.totalMessages++;
         this.serviceCenter.numMessagesIn++;
-        if(this.serviceCenter.queue.length == 0){
-          // verifica qual vai ser a saida do evento, sucesso, falha, adiamento, e então cria o evento de saida
-          lef.push(new OutServiceCenterEvent(this.lef, this.time + 50, this.funct, this.serviceCenter));
-        }else{
-          this.serviceCenter.queue.push(this);
+        if(this.serviceCenter.queue.length == 0) {
+            // verifica qual vai ser a saida do evento, sucesso, falha, adiamento, e então cria o evento de saida
+            this.nextEventsList.push(new OutServiceCenterEvent(this.nextEventsList, this.time + 50, this.serviceCenter));
+        } else {
+            this.serviceCenter.queue.push(this);
         }
     };
 }
 
-  function OutServiceCenterEvent(lef, time, funct, serviceCenter) {
-    this.lef = lef;
+/**
+ * Evento de saída de mensagem do centro de serviço
+ */
+function OutServiceCenterEvent(nextEventsList, time, serviceCenter) {
+    this.nextEventsList = nextEventsList;
     this.time = time;
-    this.funct = funct;
     this.serviceCenter = serviceCenter;
 
-    this.execute = function(){
-      //verifica o tipo de saida e toma as atitudes necessarias, exemplo adiamento precisa criar um evento de chegada no centro servico
+    this.execute = function() {
+        //verifica o tipo de saida e toma as atitudes necessarias, exemplo adiamento precisa criar um evento de chegada no centro servico
 
-      if(this.serviceCenter.queue.length != 0){
-        this.serviceCenter.queue.shift();
-        // verifica qual vai ser a saida do evento, sucesso, falha, adiamento, e então cria o evento de saida
-        //precisa atualizar o tempo que ficou na fila
-        lef.push(new OutServiceCenterEvent(this.lef, this.time + 50, this.funct, this.serviceCenter));
-      }
+        if(this.serviceCenter.queue.length != 0) {
+            this.serviceCenter.queue.shift();
+            // verifica qual vai ser a saida do evento, sucesso, falha, adiamento, e então cria o evento de saida
+            //precisa atualizar o tempo que ficou na fila
+            this.nextEventsList.push(new OutServiceCenterEvent(this.nextEventsList, this.time + 50, this.serviceCenter));
+        }
         this.serviceCenter.numMessagesIn--;
     };
 }
 
-function EndOfSimulationEvent(time) {
+/**
+ * Evento de início de simulação
+ */
+function StartOfSimulationEvent(nextEventsList, time, receptionCenter, serviceCenterLocal, serviceCenterRemote) {
+    this.nextEventsList = nextEventsList;
     this.time = time;
-    this.execute = function(){ };
- }
+    this.receptionCenter = receptionCenter;
+    this.serviceCenterLocal = serviceCenterLocal;
+    this.serviceCenterRemote = serviceCenterRemote;
+    
+    this.execute = function() {
+        // Cria os primeiros eventos de origem local e remota
+        this.nextEventsList.push(
+            new ArrivalReceptionCenterEvent(this.nextEventsList, this.time, this.receptionCenter, this.localServiceCenter, this.remoteServiceCenter));
+        this.nextEventsList.push(
+            new ArrivalReceptionCenterEvent(this.nextEventsList, this.time, this.receptionCenter, this.localServiceCenter, this.remoteServiceCenter));
+    };
+}
 
 /**
- * Construtor do simulador
+ * Evento de fim de simulação
+ */
+function EndOfSimulationEvent(time) {
+    this.time = time;
+    this.execute = function() { };
+}
+
+/**
+ * Simulador
  */
 function Simulator() {
     "use strict";
-    var self = this;
+    var self = this; // Necessário para uso do temporizador
 
-    this.simulationTimer = undefined;
-    this.simulationTimeInterval = 500; // ms
     this.simulation = new Simulation(); // Simulação padrão
-    this.localReceptionCenter = new ReceptionCenter();
-    this.remoteReceptionCenter = new ReceptionCenter();
-    this.localServiceCenter = new ServiceCenter(10);
-    this.remoteServiceCenter = new ServiceCenter(20);
-    this.simulationRunning = false;
-    this.lef = undefined;
-    this.nextEvent = undefined;
+    this.simulationTimer = undefined; // Temporizador de execução
+    this.simulationCurrentTime = 0; // Momento atual da simulação
+    this.simulationTimeInterval = undefined; // Intervalo de execução/atualização da interface
+    
+    this.receptionCenter = undefined // Centro de recepção
+    this.localServiceCenter = undefined // Centro de serviço local
+    this.remoteServiceCenter = undefined // Centro de serviço remoto
+    
+    this.simulationInProgress = false; // Simulação em progresso ou parada/terminada
+    this.simulationRunning = false; // Simulação executando no momento ou pausada
+    
+    this.nextEventsList = undefined; // Lista de próximos eventos
+    this.nextEvent = undefined; // Próximo evento a ser executado
 
+    
+    /**
+     * Executar um passo da simulação
+     */
     this.runStep = function() { // Deve utilizar self para acessar o contexto por causa do timer
+        console.log("Simulação: passo executado.");
         self.simulationRunning = true;
-        console.log("Passo executado!");
+        
+        // Se simulação não terminou, consome próximo evento
+        if(self.nextEvent.time <= self.simulation.simulationTime) {
+            self.advanceToNextEvent();
+            self.nextEvent.execute();
+        } else { // Senão, para simulação/gera estatísticas
+            self.stopSimulation();
+        }
     };
 
+    /**
+     * Executar (iniciar/resumir) a simulação
+     */
     this.runSimulation = function() {
-        if(this.simulationRunning)
-            console.log("Simulação resumida!");
-        else
-            console.log("Simulação iniciada!");
+        // Inicializa a simulação se uma simulação ainda não estava em progresso
+        if(this.simulationInProgress) {
+            console.log("Simulação: execução resumida.");
+        } else {
+            console.log("Simulação: iniciada.");
+            this.initializeSimulation();
+        }
 
+        // Define a execução cíclica dos passos da simulação
+        this.simulationRunning = true;
         this.simulationTimer = setInterval(this.runStep, this.simulationTimeInterval);
     };
 
+    /**
+     * Pausar a simulação
+     */
     this.pauseSimulation = function() {
+        console.log("Simulação: pausada.");
         clearInterval(this.simulationTimer);
-        console.log("Simulação pausada!");
-    };
-
-    this.stopSimulation = function() {
         this.simulationRunning = false;
+    };
+
+    /**
+     * Parar a simulação e calcular as estatísticas finais
+     */
+    this.stopSimulation = function() {
+        console.log("Simulação: parada.");
+        
+        // Para a simulação
+        this.simulationRunning = false;
+        this.simulationInProgress = false;
         clearInterval(this.simulationTimer);
-        console.log("Simulação parada!");
-        this.mainRoutine();
-    };
-
-    this.mainRoutine = function() {
-        this.initializeRoutine();
-
-        while(this.nextEvent.time <= this.simulation.simulationTime){
-          this.timeAdvanceRoutine();
-          this.nextEvent.execute();
-        }
+        
+        // Computa as estatísticas até o momento
+        // TODO Acredito que isso não será necessário!
         this.computeFinalStatistics();
-        this.generateReport();
     };
 
-    this.initializeRoutine = function() {
-        this.simulationTimer = 0;
-        this.lef = new SortedArray([], null, function (a, b) {
-          return a.time - b.time;
+    /**
+     * Inicializar a simulação (configurações, eventos iniciais)
+     */
+    this.initializeSimulation = function() {
+        console.log("Simulação: parâmetros inicializados.");
+        
+        // Inicializa centros de recepção e serviço
+        this.receptionCenter = new ReceptionCenter();
+        this.localServiceCenter = new ServiceCenter(this.simulation.localServiceCenterServers);
+        this.remoteServiceCenter = new ServiceCenter(this.simulation.remoteServiceCenterServers);
+        
+        // Inicializa parâmetros de tempo de execução
+        this.simulationTimeInterval = this.simulation.simulationSpeed * 100;
+        this.simulationCurrentTime = 0;
+        
+        // Inicializa a lista de próximos eventos com eventos iniciais
+        this.nextEventsList = new SortedArray([], null, function (a, b) {
+            return a.time - b.time;
         });
-        this.nextEvent = new ArrivalReceptionCenterEvent(this.lef, this.simulationTimer, 0, this.localReceptionCenter, this.localServiceCenter, this.remoteServiceCenter);
-        this.lef.push(this.nextEvent);
-        this.lef.push(new ArrivalReceptionCenterEvent(this.lef, this.simulationTimer, 0, this.remoteReceptionCenter, this.localServiceCenter, this.remoteServiceCenter));
-        this.lef.push(new EndOfSimulationEvent(this.simulation.simulationTime));
+        this.nextEvent = new StartOfSimulationEvent(this.nextEventsList, this.simulationCurrentTime,
+                                                    this.receptionCenter, this.localServiceCenter, this.remoteServiceCenter);
+        this.nextEventsList.push(this.nextEvent);
+        this.nextEventsList.push(new EndOfSimulationEvent(this.simulation.simulationTime));
     };
 
-    this.timeAdvanceRoutine = function() {
-        this.nextEvent = this.lef.shift();
-        this.simulationTimer += this.nextEvent.time;
+    /**
+     * Avançar a simulação para o próximo evento
+     */
+    this.advanceToNextEvent = function() {
+        this.nextEvent = this.nextEventsList.shift();
+        this.simulationCurrentTime += this.nextEvent.time;
     };
 
+    /**
+     * Calcular as estatísticas finais
+     */
     this.computeFinalStatistics = function() {
-
+        
     };
+    
+//    this.mainRoutine = function() {
+//        this.initializeRoutine();
+//
+//        while(this.nextEvent.time <= this.simulation.simulationTime){
+//          this.timeAdvanceRoutine();
+//          this.nextEvent.execute();
+//        }
+//        this.computeFinalStatistics();
+//        this.generateReport();
+//    };
 
-    this.generateReport = function() {
-
-    };
 }

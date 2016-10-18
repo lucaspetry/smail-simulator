@@ -167,8 +167,8 @@ function loadDefaultSettings() {
     document.getElementById('field_simulationSeed').value = simulator.simulation.simulationSeed;
     document.getElementById('field_simulationSpeed').value = simulator.simulation.simulationSpeed;
 
-    document.getElementById('field_serversLocal').value = simulator.localServiceCenter.numberOfServers;
-    document.getElementById('field_serversRemote').value = simulator.remoteServiceCenter.numberOfServers;
+    document.getElementById('field_serversLocal').value = simulator.simulation.localServiceCenterServers;
+    document.getElementById('field_serversRemote').value = simulator.simulation.remoteServiceCenterServers;
 
     document.getElementById('field_arrivalIntervalLocal' + Function.INDEX[Function.NUMBER.EXPONENCIAL]).selected = true;
     document.getElementById('field_arrivalIntervalLocal' + Function.INDEX[Function.NUMBER.CONSTANT]).disabled = true;
