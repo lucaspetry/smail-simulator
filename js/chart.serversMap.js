@@ -20,7 +20,7 @@ function ServersMap() {
         this.cols = [];
         for(i = 1; i <= this.numCols; i++)
             this.cols.push(i);
-
+        
         this.svg = d3.select(divId).append("svg")
           .attr("width", this.width + this.margin.left + this.margin.right)
           .attr("height", this.height + this.margin.top + this.margin.bottom)
