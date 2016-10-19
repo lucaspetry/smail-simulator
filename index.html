@@ -10,9 +10,12 @@
 
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="css/chart.dashboard.css">
+    <link rel="stylesheet" href="css/chart.serversMap.css">
 
     <script src="js/d3.min.js"></script>
     <script src="js/chart.dashboard.js"></script>
+    <script src="js/chart.serversMap.js"></script>
     <script src="js/fileSaver.min.js"></script>
     <script src="js/enums.js"></script>
     <script src="js/collections.min.js"></script>
@@ -74,7 +77,7 @@
     <div id="settings_box">
         <h2 style="color: black;">Parâmetros de Simulação</h2>
         <br>
-        <div class="scroll_box">
+        <div class="scroll_box" style="height: 430px;">
             <table border="0" style="width: 100%">
                 <tr>
                     <td style="vertical-align: top;">
@@ -86,11 +89,11 @@
                             </tr>
                             <tr>
                                 <td class="label_field">Destino Local</td>
-                                <td style="text-align: center;"><input class="input_field" type="number" id="field_serversLocal"></td>
+                                <td style="text-align: center;"><input class="input_field" type="number" min="1" max="100" id="field_serversLocal"></td>
                             </tr>
                             <tr>
                                 <td class="label_field">Destino Remoto</td>
-                                <td style="text-align: center;"><input class="input_field" type="number" id="field_serversRemote"></td>
+                                <td style="text-align: center;"><input class="input_field" type="number" min="1" max="100" id="field_serversRemote"></td>
                             </tr>
                         </table>
                     </td>
@@ -366,99 +369,89 @@
     <div id="main_box">
         <table border="0" style="border-collapse: collapse; height: 100%;">
             <tr>
-                <div class="box_default" style="text-align: center; height: 50px; width: 888px; cursor: default;"><h2>Smail: Simulador de Servidores de E-mails</h2></div>
+                <div class="box_default" style="text-align: center; height: 40px; width: 878px; cursor: default;"><h2>Smail: Simulador de Servidores de E-mails</h2></div>
             </tr>
             <tr>
                 <td>
-                    <div class="box_default" id="simulation_time" style="text-align: center; height: 50px; width: 300px; margin-right: 2px; font-size: 16pt;">
-                        <div style="height: 15px;"></div>
+                    <div class="box_default" id="simulation_time" style="text-align: center; height: 40px; width: 290px; margin-right: 2px; font-size: 16pt;">
+                        <div style="height: 7px;"></div>
                         <b>Tempo Atual: </b><span id="simulation_currentTime">0</span>
                     </div>
                 </td>
                 <td>
-                    <div class="box_default" style="text-align: center; height: 50px; width: 572px">1</div>
+                    <div class="box_default" style="text-align: left; height: 40px; width: 562px">
+                        <b>Status: </b><span id="simulation_status"></span><br>
+                        <a href="http://dataaddict.fr/prenoms/#alain">- Linhas com média tempo de serviço e recepção</a><br>
+                    
+                    </div>
                 </td>
             </tr>
             <tr>
                 <td rowspan="2" style="vertical-align: top;">
-                    <div class="box_default" style="text-align: center; height: 100%; width: 300px;">
-                        <span style="font-weight: bold; font-size: 1.3em;">Próximos Eventos</span>
-                        <table id="events_table" border="0" style="border-collapse: collapse; width: inherit; margin-top: 10px">
-                            <tr>
-                                <th style="width: 30px;">#</th>
-                                <th style="width: 80px;">TEC</th>
-                                <th style="width: 100px;">Evento</th>
-                                <th style="text-align: center;">Origem</th>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>3.2</td>
-                                <td>Chegada Recepção</td>
-                                <td>Local</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>4</td>
-                                <td>Chegada Centro de Serviço</td>
-                                <td>Local</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>8.2</td>
-                                <td>Chegada Recepção</td>
-                                <td>Remota</td>
-                            </tr>
-                        </table>
+                    <div class="box_default" style="text-align: center; width: 290px; height: 100%;">
+<!--                        <div class="scroll_box" id="box_events" style="height: 100%;">-->
+                            <span style="font-weight: bold; font-size: 1.3em;">Próximos Eventos</span>
+                            <table id="events_table" border="0" style="border-collapse: collapse; width: inherit; margin-top: 10px">
+                                <tr>
+                                    <th style="width: 30px;">#</th>
+                                    <th style="width: 80px;">TEC</th>
+                                    <th style="width: 100px;">Evento</th>
+                                    <th style="text-align: center;">Origem</th>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>3.2</td>
+                                    <td>Chegada Recepção</td>
+                                    <td>Local</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>4</td>
+                                    <td>Chegada Centro de Serviço</td>
+                                    <td>Local</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>8.2</td>
+                                    <td>Chegada Recepção</td>
+                                    <td>Remota</td>
+                                </tr>
+                            </table>
+<!--                        </div>-->
                     </div>
                 </td>
-                <td border="0">
-                    <div class="box_default" style="text-align: center; height: 300px;">
-                        <b>Stats:</b><br>
-                        - Quadriculado com servidores ocupados<br>
-                        <a href="https://github.com/hkelly93/d3-relationshipgraph">---- Opção 1</a><br>
-                        <a href="http://bl.ocks.org/oyyd/859fafc8122977a3afd6">---- Opção 2</a><br>
-                        <a href="http://bl.ocks.org/tjdecke/5558084">---- Opção 3</a><br>
-                        <a href="http://bl.ocks.org/NPashaP/96447623ef4d342ee09b">- Dashboard: barras (sucesso/falha/adiamento) e pizza (LL/LR/RL/RR)</a><br>
-                        <a href="http://dataaddict.fr/prenoms/#alain">- Linhas com média tempo de serviço e recepção</a><br>
-
+                <td>
+                    <div class="box_default" id="box_info" style="text-align: center; height: auto;">
+                        <span style="font-weight: bold; font-size: 1.3em;">Status dos Servidores por Centro de Serviço</span>
+                        <table border="0">
+                            <tr>
+                                <th style="width: 200px;">Centro de Serviço<br>Destino Local</th>
+                                <td>
+                                    <div id="chart_localServiceCenter"></div>
+                                </td>
+                                <td style="width: 150px;">
+                                    Servidores ocupados:<br><br>
+                                    <span id="chart_localServiceCenter_busy" style="font-weight: bold; font-size: 16px;">0</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 200px;">Centro de Serviço<br>Destino Remoto</th>
+                                <td>
+                                    <div id="chart_remoteServiceCenter"></div>
+                                </td>
+                                <td style="width: 150px;">
+                                    Servidores ocupados:<br><br>
+                                    <span id="chart_remoteServiceCenter_busy" style="font-weight: bold; font-size: 16px;">0</span>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <style>
-                    path {  stroke: #fff; }
-                    path:hover {  opacity:0.9; }
-                    rect:hover {  fill:blue; }
-                    .axis {  font: 10px sans-serif; }
-                    .legend tr{    border-bottom:1px solid grey; }
-                    .legend tr:first-child{    border-top:1px solid grey; }
-
-                    .axis path,
-                    .axis line {
-                      fill: none;
-                      stroke: #000;
-                      shape-rendering: crispEdges;
-                    }
-
-                    .x.axis path {  display: none; }
-                    .legend{
-                        margin-bottom:76px;
-                        display:inline-block;
-                        border-collapse: collapse;
-                        border-spacing: 0px;
-                    }
-                    .legend td{
-                        padding:4px 5px;
-                        vertical-align:bottom;
-                    }
-                    .legendFreq, .legendPerc{
-                        align:right;
-                        width:50px;
-                    }
-
-                    </style>
-                    <div class="box_default" style="text-align: center; height: auto;">
+                    <div class="box_default" id="box_dashboard" style="text-align: center; height: 370px;">
+                        <span style="font-weight: bold; font-size: 1.3em;">E-mails Processados x Resultado do Processamento</span>
                         <div id="dashboard"></div>
                     </div>
                 </td>
@@ -468,40 +461,23 @@
     </div>
 
     <script>
+        
         // Cria um novo simulador
         var simulator = new Simulator();
 
+        // Dashboard de resultados de processamento de mensagens
+        var db = new Dashboard();
+
+        // Mapa de servidores ocupados nos centros de serviço
+        var localServersMap = new ServersMap();
+        var remoteServersMap = new ServersMap();
+
         // Carrega as configurações padrão na interface
         loadDefaultSettings();
-
-        // Gráfico exemplo
-        var freqData=[
-            {State:'LL',freq:{Sucesso:4786, Falha:1319, Adiamento:249}}
-            ,{State:'LR',freq:{Sucesso:1101, Falha:412, Adiamento:674}}
-            ,{State:'RL',freq:{Sucesso:932, Falha:2149, Adiamento:418}}
-            ,{State:'RR',freq:{Sucesso:832, Falha:1152, Adiamento:1862}}
-            ];
-
-        dashboard('#dashboard', freqData);
+                        
+        // Constrói os gráficos padrão da interface
+        buildDefaultGraphs();
         
-        function updateDashboard() {
-            var freqData2=[
-                {State:'LL',freq:{Sucesso:Math.random()*100, Falha:1319, Adiamento:Math.random()*100}}
-                ,{State:'LR',freq:{Sucesso:1101, Falha:412, Adiamento:674}}
-                ,{State:'RL',freq:{Sucesso:932, Falha:Math.random()*1000, Adiamento:418}}
-                ,{State:'RR',freq:{Sucesso:832, Falha:1152, Adiamento:Math.random()*100}}
-                ];
-            
-            freqData2.forEach(function(d){d.total=d.freq.Sucesso+d.freq.Falha+d.freq.Adiamento;});
-            var temp = ['Sucesso', 'Falha', 'Adiamento'].map(function(d){ 
-            return {type:d, freq: d3.sum(freqData2.map(function(t){ return t.freq[d];}))}; 
-            });    
-            
-            pC.update(temp);
-            leg.update(temp);
-            hG.update(freqData2.map(function(v){
-                return [v.State,v.total];}), barColor);
-        }
     </script>
 </body>
 

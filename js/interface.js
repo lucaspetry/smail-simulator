@@ -222,9 +222,104 @@ function loadDefaultSettings() {
     }
 }
 
+/**
+ * Construir os gráficos padrão da interface
+ */
+function buildDefaultGraphs() {
+    var freqData = [
+        { State: Direction.INDEX[0], freq: {Sucesso:0, Falha:0, Adiamento:0} },
+        { State: Direction.INDEX[1], freq: {Sucesso:0, Falha:0, Adiamento:0} },
+        { State: Direction.INDEX[2], freq: {Sucesso:0, Falha:0, Adiamento:0} },
+        { State: Direction.INDEX[3], freq: {Sucesso:0, Falha:0, Adiamento:0} }
+        ];
+
+    db.build('#dashboard', freqData);
+    
+    updateServersMap('#chart_localServiceCenter', simulator.simulation.localServiceCenterServers, 0, localServersMap);
+    updateServersMap('#chart_remoteServiceCenter', simulator.simulation.remoteServiceCenterServers,  0, remoteServersMap);
+}
+
+/**
+ * Atualizar a dashboard de resultado das mensagens
+ */
+function updateDashboard() {
+    var freqData = [
+        { State: Direction.INDEX[0], freq: {Sucesso: simulator.statistics.trafficRate[0][0],
+                                            Falha: simulator.statistics.trafficRate[0][1],
+                                            Adiamento: simulator.statistics.trafficRate[0][2]} },
+        { State: Direction.INDEX[1], freq: {Sucesso: simulator.statistics.trafficRate[1][0],
+                                            Falha: simulator.statistics.trafficRate[1][1],
+                                            Adiamento: simulator.statistics.trafficRate[1][2]} },
+        { State: Direction.INDEX[2], freq: {Sucesso: simulator.statistics.trafficRate[2][0],
+                                            Falha: simulator.statistics.trafficRate[2][1],
+                                            Adiamento: simulator.statistics.trafficRate[2][2]} },
+        { State: Direction.INDEX[3], freq: {Sucesso: simulator.statistics.trafficRate[3][0],
+                                            Falha: simulator.statistics.trafficRate[3][1],
+                                            Adiamento: simulator.statistics.trafficRate[3][2]} }
+        ];
+//    var freqData = [
+//        { State: Direction.INDEX[0], freq: {Sucesso: Math.round(Math.random()*100),
+//                                            Falha: Math.round(Math.random()*567),
+//                                            Adiamento: simulator.statistics.trafficRate[0][2]} },
+//        { State: Direction.INDEX[1], freq: {Sucesso: Math.round(Math.random()*10),
+//                                            Falha: simulator.statistics.trafficRate[1][1],
+//                                            Adiamento: simulator.statistics.trafficRate[1][2]} },
+//        { State: Direction.INDEX[2], freq: {Sucesso: Math.round(Math.random()*170),
+//                                            Falha: simulator.statistics.trafficRate[2][1],
+//                                            Adiamento: Math.round(Math.random()*1000)} },
+//        { State: Direction.INDEX[3], freq: {Sucesso: simulator.statistics.trafficRate[3][0],
+//                                            Falha: simulator.statistics.trafficRate[3][1],
+//                                            Adiamento: simulator.statistics.trafficRate[3][2]} }
+//        ];
+    db.update(freqData);
+}
+
+function updateServersMap(divId, numServers, numBusyServers, serversMap) {
+    var serversData = [];
+
+    // Adiciona servidores ocupados
+    for(i = 1; i <= numBusyServers; i++) {
+        var col = Math.ceil(i/5);
+        
+        serversData.push({row: i%5 + 1, col: col, value: 10});
+    }
+    
+    // Adiciona servidores livres
+    for(i = numBusyServers + 1; i <= numServers; i++) {
+        var col = Math.ceil(i/5);
+        
+        serversData.push({row: i%5 + 1, col: col, value: 0});
+    }
+    
+    // Atualiza número de servidores ocupados na interface
+    document.getElementById(divId.substring(1, divId.length) + "_busy").innerHTML = numBusyServers;
+    
+    // Se número de servidores mudou, redesenha.
+    // Caso contrário, atualiza
+    if(serversMap.numServers != numServers)
+        serversMap.build(divId, serversData, numServers);
+    else
+        serversMap.update(serversData);
+}
+
+/**
+ * Atualizar a interface com as novas estatísticas
+ */
 function updateInterface() {
     console.log("Method call: updateInterface()");
     
+    // Atualiza tempo atual
     document.getElementById('simulation_currentTime').innerHTML = simulator.simulationCurrentTime;
-    updateDashboard(); // just a test
+    
+    // Atualiza dashboard de resultados de mensagens
+    updateDashboard();
+    
+    // Atualiza os mapas de servidores ocupados dos centros de serviço
+    updateServersMap('#chart_localServiceCenter', simulator.simulation.localServiceCenterServers, Math.ceil(Math.random()*10), localServersMap);
+    updateServersMap('#chart_remoteServiceCenter', simulator.simulation.remoteServiceCenterServers,  Math.ceil(Math.random()*20), remoteServersMap);
+    // TODO deve ser atualizado com os números reais
+}
+
+function setSimulationStatus(status) {
+    document.getElementById('simulation_status').innerHTML = status;
 }

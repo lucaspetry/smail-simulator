@@ -3,7 +3,7 @@
  *=======================================*/
 
 /**
- * Construtor de um centro de recepção
+ * Centro de recepção
  */
 function ReceptionCenter() {
     "use strict";
@@ -14,7 +14,7 @@ function ReceptionCenter() {
 }
 
 /**
- * Construtor de um centro de serviço
+ * Centro de serviço
  */
 function ServiceCenter(numberOfServers) {
   "use strict";
@@ -103,11 +103,4 @@ function ProbabilityGenerator() {
       }
       return "adiado";
   };
-}
-
-/**
- * Construtor de um servidor
- */
-function Server() {
-    "use strict";
 }
