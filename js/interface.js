@@ -234,6 +234,9 @@ function buildDefaultGraphs() {
         ];
 
     db.build('#dashboard', freqData);
+    
+    createServersMap('#chart_localServiceCenter', simulator.simulation.localServiceCenterServers, 0, localServersMap);
+    createServersMap('#chart_remoteServiceCenter', simulator.simulation.remoteServiceCenterServers, 0, remoteServersMap);
 }
 
 /**
@@ -271,14 +274,59 @@ function updateDashboard() {
     db.update(freqData);
 }
 
+function createServersMap(divId, numServers, numBusyServers, serversMap) {
+    var serversData = [];
+
+    for(i = 1; i <= numBusyServers; i++) {
+        var col = Math.ceil(i/5);
+        
+        serversData.push({row: i%5 + 1, col: col, value: 10});
+    }
+    
+    // Servidores livres
+    for(i = numBusyServers + 1; i <= numServers; i++) {
+        var col = Math.ceil(i/5);
+        
+        serversData.push({row: i%5 + 1, col: col, value: 0});
+    }
+    
+    serversMap.build(divId, serversData, numServers);
+}
+
+function updateServersMap(divId, numServers, numBusyServers) {
+    var serversData = [];
+
+    for(i = 1; i <= numBusyServers; i++) {
+        var col = Math.ceil(i/5);
+        
+        serversData.push({row: i%5 + 1, col: col, value: 10});
+    }
+    
+    // Servidores livres
+    for(i = numBusyServers + 1; i <= numServers; i++) {
+        var col = Math.ceil(i/5);
+        
+        serversData.push({row: i%5 + 1, col: col, value: 0});
+    }
+    
+    //serversMap.heatMap(divId, serversData, numServers);
+}
+
 /**
  * Atualizar a interface com as novas estatísticas
  */
 function updateInterface() {
     console.log("Method call: updateInterface()");
     
+    // Atualiza tempo atual
     document.getElementById('simulation_currentTime').innerHTML = simulator.simulationCurrentTime;
-    updateDashboard(); // just a test
+    
+    // Atualiza dashboard de resultados de mensagens
+    updateDashboard();
+    
+    // Atualiza os mapas de servidores ocupados dos centros de serviço
+    updateServersMap('#chart_localServiceCenter', simulator.simulation.localServiceCenterServers, Math.ceil(Math.random*10));
+    updateServersMap('#chart_remoteServiceCenter', simulator.simulation.remoteServiceCenterServers,  Math.ceil(Math.random*20));
 }
 
 function setSimulationStatus(status) {
