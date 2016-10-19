@@ -11,9 +11,11 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/menu.css">
     <link rel="stylesheet" href="css/chart.dashboard.css">
+    <link rel="stylesheet" href="css/chart.serversMap.css">
 
     <script src="js/d3.min.js"></script>
     <script src="js/chart.dashboard.js"></script>
+    <script src="js/chart.serversMap.js"></script>
     <script src="js/fileSaver.min.js"></script>
     <script src="js/enums.js"></script>
     <script src="js/collections.min.js"></script>
@@ -419,6 +421,10 @@
                 </td>
                 <td>
                     <div class="box_default" id="box_info" style="text-align: center; height: 120px;">
+                        <div id="chart_localServiceCenter"></div>
+                        <script>
+                            //serversMap();
+                        </script>
                         <b>Stats:</b><br>
                         - Quadriculado com servidores ocupados<br>
                         <a href="https://github.com/hkelly93/d3-relationshipgraph">---- Opção 1</a><br>
