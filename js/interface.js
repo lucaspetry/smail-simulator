@@ -222,9 +222,65 @@ function loadDefaultSettings() {
     }
 }
 
+/**
+ * Construir os gráficos padrão da interface
+ */
+function buildDefaultGraphs() {
+    var freqData = [
+        { State: Direction.INDEX[0], freq: {Sucesso:0, Falha:0, Adiamento:0} },
+        { State: Direction.INDEX[1], freq: {Sucesso:0, Falha:0, Adiamento:0} },
+        { State: Direction.INDEX[2], freq: {Sucesso:0, Falha:0, Adiamento:0} },
+        { State: Direction.INDEX[3], freq: {Sucesso:0, Falha:0, Adiamento:0} }
+        ];
+
+    db.build('#dashboard', freqData);
+}
+
+/**
+ * Atualizar a dashboard de resultado das mensagens
+ */
+function updateDashboard() {
+    var freqData = [
+        { State: Direction.INDEX[0], freq: {Sucesso: simulator.statistics.trafficRate[0][0],
+                                            Falha: simulator.statistics.trafficRate[0][1],
+                                            Adiamento: simulator.statistics.trafficRate[0][2]} },
+        { State: Direction.INDEX[1], freq: {Sucesso: simulator.statistics.trafficRate[1][0],
+                                            Falha: simulator.statistics.trafficRate[1][1],
+                                            Adiamento: simulator.statistics.trafficRate[1][2]} },
+        { State: Direction.INDEX[2], freq: {Sucesso: simulator.statistics.trafficRate[2][0],
+                                            Falha: simulator.statistics.trafficRate[2][1],
+                                            Adiamento: simulator.statistics.trafficRate[2][2]} },
+        { State: Direction.INDEX[3], freq: {Sucesso: simulator.statistics.trafficRate[3][0],
+                                            Falha: simulator.statistics.trafficRate[3][1],
+                                            Adiamento: simulator.statistics.trafficRate[3][2]} }
+        ];
+//    var freqData = [
+//        { State: Direction.INDEX[0], freq: {Sucesso: Math.round(Math.random()*100),
+//                                            Falha: Math.round(Math.random()*567),
+//                                            Adiamento: simulator.statistics.trafficRate[0][2]} },
+//        { State: Direction.INDEX[1], freq: {Sucesso: Math.round(Math.random()*10),
+//                                            Falha: simulator.statistics.trafficRate[1][1],
+//                                            Adiamento: simulator.statistics.trafficRate[1][2]} },
+//        { State: Direction.INDEX[2], freq: {Sucesso: Math.round(Math.random()*170),
+//                                            Falha: simulator.statistics.trafficRate[2][1],
+//                                            Adiamento: Math.round(Math.random()*1000)} },
+//        { State: Direction.INDEX[3], freq: {Sucesso: simulator.statistics.trafficRate[3][0],
+//                                            Falha: simulator.statistics.trafficRate[3][1],
+//                                            Adiamento: simulator.statistics.trafficRate[3][2]} }
+//        ];
+    db.update(freqData);
+}
+
+/**
+ * Atualizar a interface com as novas estatísticas
+ */
 function updateInterface() {
     console.log("Method call: updateInterface()");
     
     document.getElementById('simulation_currentTime').innerHTML = simulator.simulationCurrentTime;
     updateDashboard(); // just a test
+}
+
+function setSimulationStatus(status) {
+    document.getElementById('simulation_status').innerHTML = status;
 }

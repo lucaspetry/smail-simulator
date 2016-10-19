@@ -64,6 +64,12 @@ function Simulation() {
  * Estatísticas da simulação
  */
 function Statistics() {
+    // Número de sucessos, falhas e adiamentos por direção de tráfego    
+    this.trafficRate = [0, 0, 0, 0];
+    this.trafficRate[Direction.NUMBER.LL] = [0, 0, 0];
+    this.trafficRate[Direction.NUMBER.LR] = [0, 0, 0];
+    this.trafficRate[Direction.NUMBER.RL] = [0, 0, 0];
+    this.trafficRate[Direction.NUMBER.RR] = [0, 0, 0];
     
 }
 
@@ -198,13 +204,18 @@ function Simulator() {
     
     this.nextEventsList = undefined; // Lista de próximos eventos
     this.nextEvent = undefined; // Próximo evento a ser executado
+    this.statistics = new Statistics(); // Estatísticas da simulação
 
     
     /**
      * Executar um passo da simulação
      */
     this.runStep = function() { // Deve utilizar self para acessar o contexto por causa do timer
-        console.log("Simulação: passo executado.");
+        if(!self.simulationInProgress) {
+            setSimulationStatus("Simulação iniciada.");
+            self.initializeSimulation();
+        }
+        
         self.simulationInProgress = true;
         
         // Se simulação não terminou, consome próximo evento
@@ -225,9 +236,9 @@ function Simulator() {
     this.runSimulation = function() {
         // Inicializa a simulação se uma simulação ainda não estava em progresso
         if(this.simulationInProgress) {
-            console.log("Simulação: execução resumida.");
+            setSimulationStatus("Simulação resumida.");
         } else {
-            console.log("Simulação: iniciada.");
+            setSimulationStatus("Simulação iniciada.");
             this.initializeSimulation();
         }
 
@@ -240,7 +251,7 @@ function Simulator() {
      * Pausar a simulação
      */
     this.pauseSimulation = function() {
-        console.log("Simulação: pausada.");
+        setSimulationStatus("Simulação pausada.");
         clearInterval(this.simulationTimer);
         this.simulationRunning = false;
     };
@@ -249,7 +260,7 @@ function Simulator() {
      * Parar a simulação e calcular as estatísticas finais
      */
     this.stopSimulation = function() {
-        console.log("Simulação: parada.");
+        setSimulationStatus("Simulação parada.");
         
         // Para a simulação
         this.simulationRunning = false;
@@ -264,9 +275,7 @@ function Simulator() {
     /**
      * Inicializar a simulação (configurações, eventos iniciais)
      */
-    this.initializeSimulation = function() {
-        console.log("Simulação: parâmetros inicializados.");
-        
+    this.initializeSimulation = function() {        
         // Inicializa centros de recepção e serviço
         this.receptionCenter = new ReceptionCenter();
         this.localServiceCenter = new ServiceCenter(this.simulation.localServiceCenterServers);
@@ -275,6 +284,8 @@ function Simulator() {
         // Inicializa parâmetros de tempo de execução
         this.simulationTimeInterval = this.simulation.simulationSpeed * 100;
         this.simulationCurrentTime = 0;
+        
+        this.statistics = new Statistics();
         
         // Inicializa a lista de próximos eventos com eventos iniciais
         this.nextEventsList = new SortedArray([], null, function (a, b) {

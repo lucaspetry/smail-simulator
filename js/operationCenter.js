@@ -3,7 +3,7 @@
  *=======================================*/
 
 /**
- * Construtor de um centro de recepção
+ * Centro de recepção
  */
 function ReceptionCenter() {
     "use strict";
@@ -13,7 +13,7 @@ function ReceptionCenter() {
 }
 
 /**
- * Construtor de um centro de serviço
+ * Centro de serviço
  */
 function ServiceCenter(numberOfServers) {
   "use strict";
@@ -21,11 +21,4 @@ function ServiceCenter(numberOfServers) {
     this.totalMessages = 0;
     this.numMessagesIn = 0;
     this.queue = new Array();
-}
-
-/**
- * Construtor de um servidor
- */
-function Server() {
-    "use strict";
 }
