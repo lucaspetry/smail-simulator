@@ -71,6 +71,38 @@ function Statistics() {
     this.trafficRate[Direction.NUMBER.RL] = [0, 0, 0];
     this.trafficRate[Direction.NUMBER.RR] = [0, 0, 0];
     
+    this.getSimulationReport = function() {
+        var report =
+            "==============================================================================================\n" +
+            "                                    Relatório da Simulação                                    \n" +
+            "==============================================================================================\n" +
+            "\n" +
+            "Parâmetros da simulação\n" +
+            "----------------------------------------------------------------------------------------------\n" +
+            "Tempo de simulação:           XXXXXXXX                Núm. Servidores Dest. Local:  XXX\n" +
+            "Semente de aleatoriedade:     XXXXXXXX                Núm. Servidores Dest. Remoto: XXX\n" +
+            "\n" +
+            "Resultados da simulação\n" +
+            "----------------------------------------------------------------------------------------------\n" +
+            "                                                         Média        Mínimo        Máximo\n" +
+            "Número de mensagens no sistema                          XXXXXX        XXXXXX        XXXXXX\n" +
+            "Tempo de trânsito das mensagens no sistema              XXXXXX        XXXXXX        XXXXXX\n" +
+            "\n" +
+            "Mensagens despachadas                                                                     \n" +
+            "Total                                                   XXXXXX        XXXXXX        XXXXXX\n" +
+            "Mensagens despachadas LOCAL -> LOCAL                    XXXXXX        XXXXXX        XXXXXX\n" +
+            "Mensagens despachadas LOCAL -> REMOTO                   XXXXXX        XXXXXX        XXXXXX\n" +
+            "Mensagens despachadas REMOTO -> LOCAL                   XXXXXX        XXXXXX        XXXXXX\n" +
+            "Mensagens despachadas REMOTO -> REMOTO                  XXXXXX        XXXXXX        XXXXXX\n" +
+            "Total de mensagens no sistema no fim da simulação       XXXXXX        XXXXXX        XXXXXX\n" +
+            "\n" +
+            "Taxa de ocupação dos centros de serviço                                                   \n" +
+            "Destino Local                                           XXXXXX        XXXXXX        XXXXXX\n" +
+            "Destino Remoto                                          XXXXXX        XXXXXX        XXXXXX\n";
+        
+        return report;
+    }
+    
 }
 
 /**
