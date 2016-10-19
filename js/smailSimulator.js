@@ -279,10 +279,10 @@ function Simulator() {
     this.initializeSimulation = function() {        
         // Inicializa centros de recepção e serviço
         this.receptionCenter = new ReceptionCenter();
-        this.localServiceCenter = new ServiceCenter(view.numberOfServers);
-        this.remoteServiceCenter = new ServiceCenter(view.numberOfServers);
+        this.localServiceCenter = new ServiceCenter(this.simulation.localServiceCenterServers);
+        this.remoteServiceCenter = new ServiceCenter(this.simulation.remoteServiceCenterServers);
 
-        //inializa o probabilityGenerator
+        // Inicializa o gerador de probabilidades
         this.initializeProbabilityGenerator();
 
         // Inicializa parâmetros de tempo de execução
@@ -317,44 +317,39 @@ function Simulator() {
     };
 
     this.initializeProbabilityGenerator = function() {
-      //Recption center
-      this.probabilityGenerator.localProbabilityFunction = view.data;
-      this.probabilityGenerator.remoteProbabilityFunction = view.data;
-      this.probabilityGenerator.local2LocalReceptionTime = view.data;
-      this.probabilityGenerator.local2RemoteReceptionTime = view.data;
-      this.probabilityGenerator.remote2RemoteReceptionTime = view.data;
-      this.probabilityGenerator.remote2LocalReceptionTime = view.data;
-      this.probabilityGenerator.probabilityOfDestinyBeLocal = view.data;
-      this.probabilityGenerator.probabilityOfDestinyBeRemote = view.data;
+        this.probabilityGenerator.trafficVolume = this.simulation.traffic;
+        this.probabilityGenerator.trafficRate = this.simulation.trafficRate;
+        this.probabilityGenerator.arrivalIntervalLocal = this.simulation.arrivalIntervalLocal;
+        this.probabilityGenerator.arrivalIntervalRemote = this.simulation.arrivalIntervalRemote;
+        this.probabilityGenerator.receptionTimes = this.simulation.receptionTime;
+        this.probabilityGenerator.serviceTimeFunctions = this.simulation.serviceTime;
 
-      //Service center
-      this.probabilityGenerator.probabilityOfSucces = view.data;
-      this.probabilityGenerator.probabilityOfFail = view.data;
-      this.probabilityGenerator.probabilityOfPostponed = view.data;
-      this.probabilityGenerator.LLSProbabilityFunction = view.data;
-      this.probabilityGenerator.LLFProbabilityFunction = view.data;
-      this.probabilityGenerator.LLAProbabilityFunction = view.data;
-      this.probabilityGenerator.LRSProbabilityFunction = view.data;
-      this.probabilityGenerator.LRFProbabilityFunction = view.data;
-      this.probabilityGenerator.LRAProbabilityFunction = view.data;
-      this.probabilityGenerator.RLSProbabilityFunction = view.data;
-      this.probabilityGenerator.RLFProbabilityFunction = view.data;
-      this.probabilityGenerator.RLAProbabilityFunction = view.data;
-      this.probabilityGenerator.RRSProbabilityFunction = view.data;
-      this.probabilityGenerator.RRFProbabilityFunction = view.data;
-      this.probabilityGenerator.RRAProbabilityFunction = view.data;
-    };
-
-
-//    this.mainRoutine = function() {
-//        this.initializeRoutine();
+//      //Recption center
+//      this.probabilityGenerator.localProbabilityFunction = view.data;
+//      this.probabilityGenerator.remoteProbabilityFunction = view.data;
+//      this.probabilityGenerator.local2LocalReceptionTime = view.data;
+//      this.probabilityGenerator.local2RemoteReceptionTime = view.data;
+//      this.probabilityGenerator.remote2RemoteReceptionTime = view.data;
+//      this.probabilityGenerator.remote2LocalReceptionTime = view.data;
+//      this.probabilityGenerator.probabilityOfDestinyBeLocal = view.data;
+//      this.probabilityGenerator.probabilityOfDestinyBeRemote = view.data;
 //
-//        while(this.nextEvent.time <= this.simulation.simulationTime){
-//          this.timeAdvanceRoutine();
-//          this.nextEvent.execute();
-//        }
-//        this.computeFinalStatistics();
-//        this.generateReport();
-//    };
+//      //Service center
+//      this.probabilityGenerator.probabilityOfSucces = view.data;
+//      this.probabilityGenerator.probabilityOfFail = view.data;
+//      this.probabilityGenerator.probabilityOfPostponed = view.data;
+//      this.probabilityGenerator.LLSProbabilityFunction = view.data;
+//      this.probabilityGenerator.LLFProbabilityFunction = view.data;
+//      this.probabilityGenerator.LLAProbabilityFunction = view.data;
+//      this.probabilityGenerator.LRSProbabilityFunction = view.data;
+//      this.probabilityGenerator.LRFProbabilityFunction = view.data;
+//      this.probabilityGenerator.LRAProbabilityFunction = view.data;
+//      this.probabilityGenerator.RLSProbabilityFunction = view.data;
+//      this.probabilityGenerator.RLFProbabilityFunction = view.data;
+//      this.probabilityGenerator.RLAProbabilityFunction = view.data;
+//      this.probabilityGenerator.RRSProbabilityFunction = view.data;
+//      this.probabilityGenerator.RRFProbabilityFunction = view.data;
+//      this.probabilityGenerator.RRAProbabilityFunction = view.data;
+    };
 
 }
