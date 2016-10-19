@@ -12,7 +12,7 @@ function Simulation() {
     this.simulationTime = 500;
     this.simulationSeed = 11;
     this.simulationSpeed = 5;
-    
+
     // Número de servidores nos centros de serviço
     this.localServiceCenterServers = 10;
     this.remoteServiceCenterServers = 20;
@@ -64,7 +64,7 @@ function Simulation() {
  * Estatísticas da simulação
  */
 function Statistics() {
-    
+
 }
 
 /**
@@ -159,7 +159,7 @@ function StartOfSimulationEvent(nextEventsList, time, receptionCenter, serviceCe
     this.receptionCenter = receptionCenter;
     this.serviceCenterLocal = serviceCenterLocal;
     this.serviceCenterRemote = serviceCenterRemote;
-    
+
     this.execute = function() {
         // Cria os primeiros eventos de origem local e remota
         this.nextEventsList.push(
@@ -185,28 +185,29 @@ function Simulator() {
     var self = this; // Necessário para uso do temporizador
 
     this.simulation = new Simulation(); // Simulação padrão
+    this.probabilityGenerator = new ProbabilityGenerator();
     this.simulationTimer = undefined; // Temporizador de execução
     this.simulationCurrentTime = 0; // Momento atual da simulação
     this.simulationTimeInterval = undefined; // Intervalo de execução/atualização da interface
-    
+
     this.receptionCenter = undefined // Centro de recepção
     this.localServiceCenter = undefined // Centro de serviço local
     this.remoteServiceCenter = undefined // Centro de serviço remoto
-    
+
     this.simulationInProgress = false; // Simulação em progresso ou parada/terminada
     this.simulationRunning = false; // Simulação executando no momento ou pausada
-    
+
     this.nextEventsList = undefined; // Lista de próximos eventos
     this.nextEvent = undefined; // Próximo evento a ser executado
 
-    
+
     /**
      * Executar um passo da simulação
      */
     this.runStep = function() { // Deve utilizar self para acessar o contexto por causa do timer
         console.log("Simulação: passo executado.");
         self.simulationInProgress = true;
-        
+
         // Se simulação não terminou, consome próximo evento
         if(self.nextEvent.time <= self.simulation.simulationTime) {
             self.advanceToNextEvent();
@@ -214,7 +215,7 @@ function Simulator() {
         } else { // Senão, para simulação/gera estatísticas
             self.stopSimulation();
         }
-        
+
         // Atualiza a interface
         updateInterface();
     };
@@ -250,12 +251,12 @@ function Simulator() {
      */
     this.stopSimulation = function() {
         console.log("Simulação: parada.");
-        
+
         // Para a simulação
         this.simulationRunning = false;
         this.simulationInProgress = false;
         clearInterval(this.simulationTimer);
-        
+
         // Computa as estatísticas até o momento
         // TODO Acredito que isso não será necessário!
         this.computeFinalStatistics();
@@ -266,16 +267,19 @@ function Simulator() {
      */
     this.initializeSimulation = function() {
         console.log("Simulação: parâmetros inicializados.");
-        
+
         // Inicializa centros de recepção e serviço
         this.receptionCenter = new ReceptionCenter();
-        this.localServiceCenter = new ServiceCenter(this.simulation.localServiceCenterServers);
-        this.remoteServiceCenter = new ServiceCenter(this.simulation.remoteServiceCenterServers);
-        
+        this.localServiceCenter = new ServiceCenter(view.numberOfServers);
+        this.remoteServiceCenter = new ServiceCenter(view.numberOfServers);
+
+        //inializa o probabilityGenerator
+        this.initializeProbabilityGenerator();
+
         // Inicializa parâmetros de tempo de execução
         this.simulationTimeInterval = this.simulation.simulationSpeed * 100;
         this.simulationCurrentTime = 0;
-        
+
         // Inicializa a lista de próximos eventos com eventos iniciais
         this.nextEventsList = new SortedArray([], null, function (a, b) {
             return a.time - b.time;
@@ -298,8 +302,38 @@ function Simulator() {
      * Calcular as estatísticas finais
      */
     this.computeFinalStatistics = function() {
-        
+
     };
+
+    this.initializeProbabilityGenerator() {
+      //Recption center
+      this.probabilityGenerator.localProbabilityFunction = view.data;
+      this.probabilityGenerator.remoteProbabilityFunction = view.data;
+      this.probabilityGenerator.local2LocalReceptionTime = view.data;
+      this.probabilityGenerator.local2RemoteReceptionTime = view.data;
+      this.probabilityGenerator.remote2RemoteReceptionTime = view.data;
+      this.probabilityGenerator.remote2LocalReceptionTime = view.data;
+      this.probabilityGenerator.probabilityOfDestinyBeLocal = view.data;
+      this.probabilityGenerator.probabilityOfDestinyBeRemote = view.data;
+
+      //Service center
+      this.probabilityGenerator.probabilityOfSucces = view.data;
+      this.probabilityGenerator.probabilityOfFail = view.data;
+      this.probabilityGenerator.probabilityOfPostponed = view.data;
+      this.probabilityGenerator.LLSProbabilityFunction = view.data;
+      this.probabilityGenerator.LLFProbabilityFunction = view.data;
+      this.probabilityGenerator.LLAProbabilityFunction = view.data;
+      this.probabilityGenerator.LRSProbabilityFunction = view.data;
+      this.probabilityGenerator.LRFProbabilityFunction = view.data;
+      this.probabilityGenerator.LRAProbabilityFunction = view.data;
+      this.probabilityGenerator.RLSProbabilityFunction = view.data;
+      this.probabilityGenerator.RLFProbabilityFunction = view.data;
+      this.probabilityGenerator.RLAProbabilityFunction = view.data;
+      this.probabilityGenerator.RRSProbabilityFunction = view.data;
+      this.probabilityGenerator.RRFProbabilityFunction = view.data;
+      this.probabilityGenerator.RRAProbabilityFunction = view.data;
+    };
+
 
 //    this.mainRoutine = function() {
 //        this.initializeRoutine();
