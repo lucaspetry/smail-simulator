@@ -235,8 +235,8 @@ function buildDefaultGraphs() {
 
     db.build('#dashboard', freqData);
     
-    createServersMap('#chart_localServiceCenter', simulator.simulation.localServiceCenterServers, 0, localServersMap);
-    createServersMap('#chart_remoteServiceCenter', simulator.simulation.remoteServiceCenterServers, 0, remoteServersMap);
+    updateServersMap('#chart_localServiceCenter', simulator.simulation.localServiceCenterServers, 0, localServersMap);
+    updateServersMap('#chart_remoteServiceCenter', simulator.simulation.remoteServiceCenterServers,  0, remoteServersMap);
 }
 
 /**
@@ -274,42 +274,32 @@ function updateDashboard() {
     db.update(freqData);
 }
 
-function createServersMap(divId, numServers, numBusyServers, serversMap) {
+function updateServersMap(divId, numServers, numBusyServers, serversMap) {
     var serversData = [];
 
+    // Adiciona servidores ocupados
     for(i = 1; i <= numBusyServers; i++) {
         var col = Math.ceil(i/5);
         
         serversData.push({row: i%5 + 1, col: col, value: 10});
     }
     
-    // Servidores livres
+    // Adiciona servidores livres
     for(i = numBusyServers + 1; i <= numServers; i++) {
         var col = Math.ceil(i/5);
         
         serversData.push({row: i%5 + 1, col: col, value: 0});
     }
     
-    serversMap.build(divId, serversData, numServers);
-}
-
-function updateServersMap(divId, numServers, numBusyServers) {
-    var serversData = [];
-
-    for(i = 1; i <= numBusyServers; i++) {
-        var col = Math.ceil(i/5);
-        
-        serversData.push({row: i%5 + 1, col: col, value: 10});
-    }
+    // Atualiza número de servidores ocupados na interface
+    document.getElementById(divId.substring(1, divId.length) + "_busy").innerHTML = numBusyServers;
     
-    // Servidores livres
-    for(i = numBusyServers + 1; i <= numServers; i++) {
-        var col = Math.ceil(i/5);
-        
-        serversData.push({row: i%5 + 1, col: col, value: 0});
-    }
-    
-    //serversMap.heatMap(divId, serversData, numServers);
+    // Se número de servidores mudou, redesenha.
+    // Caso contrário, atualiza
+    if(serversMap.numServers != numServers)
+        serversMap.build(divId, serversData, numServers);
+    else
+        serversMap.update(serversData);
 }
 
 /**
@@ -325,8 +315,9 @@ function updateInterface() {
     updateDashboard();
     
     // Atualiza os mapas de servidores ocupados dos centros de serviço
-    updateServersMap('#chart_localServiceCenter', simulator.simulation.localServiceCenterServers, Math.ceil(Math.random*10));
-    updateServersMap('#chart_remoteServiceCenter', simulator.simulation.remoteServiceCenterServers,  Math.ceil(Math.random*20));
+    updateServersMap('#chart_localServiceCenter', simulator.simulation.localServiceCenterServers, Math.ceil(Math.random()*10), localServersMap);
+    updateServersMap('#chart_remoteServiceCenter', simulator.simulation.remoteServiceCenterServers,  Math.ceil(Math.random()*20), remoteServersMap);
+    // TODO deve ser atualizado com os números reais
 }
 
 function setSimulationStatus(status) {

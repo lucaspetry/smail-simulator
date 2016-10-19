@@ -112,7 +112,7 @@ function Dashboard() {
                 bars.select("text").transition().duration(500)
                     .text(function(d){ return d3.format(",")(d[1])})
                     .attr("y", function(d) {return y(d[1])-5; });            
-            }        
+            }
             return hG;
         }
 

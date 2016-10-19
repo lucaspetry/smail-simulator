@@ -380,7 +380,8 @@
                 </td>
                 <td>
                     <div class="box_default" style="text-align: left; height: 40px; width: 562px">
-                        <b>Status: </b><span id="simulation_status"></span>
+                        <b>Status: </b><span id="simulation_status"></span><br>
+                        <a href="http://dataaddict.fr/prenoms/#alain">- Linhas com média tempo de serviço e recepção</a><br>
                     
                     </div>
                 </td>
@@ -428,16 +429,22 @@
                                 <td>
                                     <div id="chart_localServiceCenter"></div>
                                 </td>
+                                <td style="width: 150px;">
+                                    Servidores ocupados:<br><br>
+                                    <span id="chart_localServiceCenter_busy" style="font-weight: bold; font-size: 16px;">0</span>
+                                </td>
                             </tr>
                             <tr>
                                 <th style="width: 200px;">Centro de Serviço<br>Destino Remoto</th>
                                 <td>
                                     <div id="chart_remoteServiceCenter"></div>
                                 </td>
+                                <td style="width: 150px;">
+                                    Servidores ocupados:<br><br>
+                                    <span id="chart_remoteServiceCenter_busy" style="font-weight: bold; font-size: 16px;">0</span>
+                                </td>
                             </tr>
                         </table>
-                        <a href="http://bl.ocks.org/tjdecke/5558084">- Opção 3</a><br>
-                        <a href="http://dataaddict.fr/prenoms/#alain">- Linhas com média tempo de serviço e recepção</a><br>
                     </div>
                 </td>
             </tr>
@@ -457,8 +464,11 @@
         
         // Cria um novo simulador
         var simulator = new Simulator();
+
+        // Dashboard de resultados de processamento de mensagens
         var db = new Dashboard();
-                
+
+        // Mapa de servidores ocupados nos centros de serviço
         var localServersMap = new ServersMap();
         var remoteServersMap = new ServersMap();
 
