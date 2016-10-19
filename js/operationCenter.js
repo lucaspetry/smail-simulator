@@ -53,7 +53,6 @@ function ProbabilityGenerator() {
   this.RRAProbabilityFunction;
 
   this.functionMap = new FastMap();
-  this.buildFunctionMap();
 
   this.buildFunctionMap = function() {
     this.functionMap.add("LL", this.local2LocalReceptionTime);
@@ -73,6 +72,8 @@ function ProbabilityGenerator() {
     this.functionMap.add("RRF", this.RRFProbabilityFunction);
     this.functionMap.add("RRA", this.RRAProbabilityFunction);
   };
+    
+  this.buildFunctionMap();
 
   this.getTimeToNextArrival = function(origem) {
       if(origem == "local"){

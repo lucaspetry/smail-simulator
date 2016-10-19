@@ -64,6 +64,7 @@ function playSimulation(src) {
     if(src.id == "btn_play") {
         src.id = "btn_pause";
         document.getElementById("img_play").setAttribute("src", "images/appbar.control.pause.png");
+        loadInterfaceSettings();
         simulator.runSimulation();
     } else {
         src.id = "btn_play";
@@ -223,6 +224,49 @@ function loadDefaultSettings() {
 }
 
 /**
+ * Carregar as configurações da interface na simulação
+ */
+function loadInterfaceSettings() {
+    console.log("Method call: loadInterfaceSettings()");
+
+    simulator.simulation.simulationTime = document.getElementById('field_simulationTime').value;
+    simulator.simulation.simulationSeed = document.getElementById('field_simulationSeed').value;
+    simulator.simulation.simulationSpeed = document.getElementById('field_simulationSpeed').value;
+
+    simulator.simulation.localServiceCenterServers = document.getElementById('field_serversLocal').value;
+    simulator.simulation.remoteServiceCenterServers = document.getElementById('field_serversRemote').value;
+
+    simulator.simulation.arrivalIntervalLocal[1] = document.getElementById('field_arrivalIntervalLocalParam1').value;
+    simulator.simulation.arrivalIntervalRemote[1] = document.getElementById('field_arrivalIntervalRemoteParam1').value;
+
+    for(i = 0; i < Direction.SIZE; i++) {
+        // Volume de tráfego
+        simulator.simulation.traffic[i] = document.getElementById('field_traffic' + Direction.INDEX[i]).value;
+
+        // Taxas de sucesso, falha e adiamento
+        simulator.simulation.trafficRate[i][0] = document.getElementById('field_rateSuccess' + Direction.INDEX[i]).value;
+        simulator.simulation.trafficRate[i][1] = document.getElementById('field_rateFailure' + Direction.INDEX[i]).value;
+        simulator.simulation.trafficRate[i][2] = document.getElementById('field_ratePostponement' + Direction.INDEX[i]).value;
+
+        // Tempos de recepção
+        simulator.simulation.receptionTime[i] = document.getElementById('field_reception' + Direction.INDEX[i] + "Param1").value;
+
+        // Tempos de serviço
+        for(j = 0; j < Status.SIZE; j++) {
+            func = document.getElementById('field_service' + Direction.INDEX[i] + Status.INDEX[j]);
+            func = func[func.selectedIndex].value;
+            funcParams = Function.PARAMS[Function.INDEX[func]];
+            
+            simulator.simulation.serviceTime[Direction.INDEX[i]][j][0] = func;
+
+            for(k = 0; k < funcParams.length; k++) {
+                simulator.simulation.serviceTime[Direction.INDEX[i]][j][k+1] = document.getElementById('field_service' + Direction.INDEX[i] + Status.INDEX[j] + "Param" + (k+1)).value;
+            }
+        }
+    }
+}
+
+/**
  * Construir os gráficos padrão da interface
  */
 function buildDefaultGraphs() {
@@ -292,7 +336,8 @@ function updateServersMap(divId, numServers, numBusyServers, serversMap) {
     }
     
     // Atualiza número de servidores ocupados na interface
-    document.getElementById(divId.substring(1, divId.length) + "_busy").innerHTML = numBusyServers;
+    document.getElementById(divId.substring(1, divId.length) + "_busy")
+                                    .innerHTML = numBusyServers + "/" + numServers;
     
     // Se número de servidores mudou, redesenha.
     // Caso contrário, atualiza

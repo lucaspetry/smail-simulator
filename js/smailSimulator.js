@@ -316,7 +316,7 @@ function Simulator() {
 
     };
 
-    this.initializeProbabilityGenerator() {
+    this.initializeProbabilityGenerator = function() {
       //Recption center
       this.probabilityGenerator.localProbabilityFunction = view.data;
       this.probabilityGenerator.remoteProbabilityFunction = view.data;
