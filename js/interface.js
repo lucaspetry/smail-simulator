@@ -318,20 +318,6 @@ function updateDashboard() {
                                             Falha: simulator.statistics.trafficRate[3][1],
                                             Adiamento: simulator.statistics.trafficRate[3][2]} }
         ];
-//    var freqData = [
-//        { State: Direction.INDEX[0], freq: {Sucesso: Math.round(Math.random()*100),
-//                                            Falha: Math.round(Math.random()*567),
-//                                            Adiamento: simulator.statistics.trafficRate[0][2]} },
-//        { State: Direction.INDEX[1], freq: {Sucesso: Math.round(Math.random()*10),
-//                                            Falha: simulator.statistics.trafficRate[1][1],
-//                                            Adiamento: simulator.statistics.trafficRate[1][2]} },
-//        { State: Direction.INDEX[2], freq: {Sucesso: Math.round(Math.random()*170),
-//                                            Falha: simulator.statistics.trafficRate[2][1],
-//                                            Adiamento: Math.round(Math.random()*1000)} },
-//        { State: Direction.INDEX[3], freq: {Sucesso: simulator.statistics.trafficRate[3][0],
-//                                            Falha: simulator.statistics.trafficRate[3][1],
-//                                            Adiamento: simulator.statistics.trafficRate[3][2]} }
-//        ];
     db.update(freqData);
 }
 

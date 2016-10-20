@@ -344,7 +344,7 @@ function Simulator() {
             // Atualiza a interface
             updateInterface();
         } else { // Senão, para simulação/gera estatísticas
-            this.stopSimulation();
+            stopSimulation();
         }
     };
 
@@ -361,7 +361,9 @@ function Simulator() {
         
         function step() {
             self.runStep();
-            self.runSimulation();
+            
+            if(self.simulationInProgress)
+                self.runSimulation();
         }
         
         // Define a execução cíclica dos passos da simulação
@@ -394,6 +396,9 @@ function Simulator() {
         // Computa as estatísticas até o momento
         // TODO Acredito que isso não será necessário!
         this.computeFinalStatistics();
+        
+        // Atualiza a interface
+        updateInterface();
     };
 
     /**
@@ -421,6 +426,8 @@ function Simulator() {
         this.nextEvent = new StartOfSimulationEvent(this.nextEventsList, this.simulationCurrentTime, this);
         this.nextEventsList.push(this.nextEvent);
         this.nextEventsList.push(new EndOfSimulationEvent(this.simulation.simulationTime));
+        
+        updateInterface();
     };
 
     /**
