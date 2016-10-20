@@ -22,7 +22,7 @@ Function = {
         UNIFORM : "Uniforme"
     },
     PARAMS : {
-        CONSTANT : [],
+        CONSTANT : ["c"],
         EXPONENCIAL : ["λ"],
         NORMAL : ["μ", "σ"],
         TRIANGULAR : ["a", "b", "c"],

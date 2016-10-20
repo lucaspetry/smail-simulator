@@ -17,7 +17,7 @@ function getDistributionFunction(functionNumber) {
 
     var triangular = function(a,b,c) {
         "use strict";
-        this.limit = (b - a) / (c - a);
+        var limit = (b - a) / (c - a);
         var r = Math.random();
         var aux;
 

@@ -37,15 +37,16 @@ function ServiceCenter(numberOfServers) {
     };
 }
 
+/**
+ * Gerador de probabilidades (?)
+ */
 function ProbabilityGenerator() {
-
-    this.trafficVolume;
+    this.trafficVolume = [/* LL, LR, RL, RR */];
     this.trafficRate;
     this.arrivalIntervalLocal = [/* Function.NUMBER, Param */];
     this.arrivalIntervalRemote = [/* Function.NUMBER, Param */];
-    this.receptionTimes = [0, 0, 0, 0];
+    this.receptionTimes = [/* LL, LR, RL, RR */];
     this.serviceTimeFunctions;
-
 
     /**
      * Obter o tempo até a próxima chegada
@@ -79,11 +80,19 @@ function ProbabilityGenerator() {
                 return getDistributionFunction(funcParams[0])(funcParams[1], funcParams[2], funcParams[3]);
         }
     };
+    
+    /**
+     * Obter o tempo de recepção
+     * @param direction direção da mensagem
+     * @return
+     */
+    this.getReceptionTime = function(direction) {
+        return this.receptionTimes[direction];
+    };
 
     /**
-     * Obter o tempo de serviço
-     * @param direction direção da mensagem
-     * @param status resultado do processamento da mensagem
+     * Obter a direção da mensagem
+     * @param origin origem da mensagem
      * @return
      */
     this.getDirection = function(origin) {
@@ -114,15 +123,14 @@ function ProbabilityGenerator() {
         if(r < this.trafficRate[direction][Status.NUMBER.SUCESS]/100){
             return Status.NUMBER.SUCESS;
         }
-        if(r > this.trafficRate[direction][Status.NUMBER.SUCESS]/100
-           && r < this.trafficRate[direction][Status.NUMBER.FAIL]/100){
+        
+        if(r >= this.trafficRate[direction][Status.NUMBER.SUCESS]/100
+           && r < (this.trafficRate[direction][Status.NUMBER.SUCESS]
+                   + this.trafficRate[direction][Status.NUMBER.FAIL])/100){
             return Status.NUMBER.FAIL;
         }
+        
         return Status.NUMBER.POSTPONE;
-    };
-    
-    this.getReceptionTime = function(direction) {
-        return this.receptionTimes[direction];
     };
 
 }

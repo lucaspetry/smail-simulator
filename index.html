@@ -43,7 +43,7 @@
                 <img src="images/appbar.cog.png" width="50px" />
             </li>
             <li onclick="showHideBox('time_settings_box')">
-                <span class="tooltiptext">Tempo de Simulação</span>
+                <span class="tooltiptext">Tempo/Velocidade da Simulação</span>
                 <img src="images/appbar.timer.png" width="50px" />
             </li>
             <li id="btn_play" onclick="playSimulation(this)">
@@ -65,6 +65,10 @@
             <li onclick="alert('Não disponível!')">
                 <span class="tooltiptext">Documentação do Sistema</span>
                 <img src="images/appbar.cabinet.files.png" width="50px" />
+            </li>
+            <li onclick="window.open('http://github.com/lucaspetry/smail-simulator');">
+                <span class="tooltiptext">Código Fonte</span>
+                <img src="images/appbar.code.xml.png" width="50px" />
             </li>
         </ul>
     </div>
@@ -376,16 +380,15 @@
             </tr>
             <tr>
                 <td>
-                    <div class="box_default" id="simulation_time" style="text-align: center; height: 40px; width: 290px; margin-right: 2px; font-size: 16pt;">
-                        <div style="height: 7px;"></div>
+                    <div class="box_default" id="simulation_time" style="text-align: center; height: 30px; width: 290px; margin-right: 2px; font-size: 18px;">
+                        <div style="height: 5px;"></div>
                         <b>Tempo Atual: </b><span id="simulation_currentTime">0</span>
                     </div>
                 </td>
                 <td>
-                    <div class="box_default" style="text-align: left; height: 40px; width: 562px">
-                        <b>Status: </b><span id="simulation_status"></span><br>
-                        <a href="http://dataaddict.fr/prenoms/#alain">- Linhas com média tempo de serviço e recepção</a><br>
-                    
+                    <div class="box_default" style="text-align: left; height: 30px; width: 562px; font-size: 18px;">
+                        <div style="height: 5px;"></div>
+                        <b>Status: </b><span id="simulation_status"></span>                 
                     </div>
                 </td>
             </tr>
@@ -454,11 +457,13 @@
                     </div>
                 </td>
             </tr>
+<!--
             <tr>
                 <td colspan="2">
                     <div class="box_default" style="text-align: center; height: 100px; width: 878px; cursor: default;"><h2>Teste</h2></div>
                 </td>
             </tr>
+-->
         </table>
 
     </div>
