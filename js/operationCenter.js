@@ -10,11 +10,8 @@ function ReceptionCenter() {
     this.waitQueue = new Array();
     this.currentEvent;
 
-    this.totalMessages = 0;
-    this.numMessagesIn = 0;
-
     this.isBusy = function() {
-        return this.waitQueue.length == 0;
+        return this.currentEvent != undefined;
     }
 
     this.pushToWaitQueue = function(arrivalEvent) {
@@ -34,6 +31,10 @@ function ServiceCenter(numberOfServers) {
     this.isBusy = function() {
         return this.executionQueue.length == numberOfServers;
     }
+    
+    this.getNumberOfBusyServers = function() {
+        return this.numberOfServers - this.availableServers;
+    };
 }
 
 function ProbabilityGenerator() {
@@ -110,7 +111,6 @@ function ProbabilityGenerator() {
      */
     this.getStatus = function(direction) {
         var r = Math.random();
-        
         if(r < this.trafficRate[direction][Status.NUMBER.SUCESS]){
             return Status.NUMBER.SUCESS;
         }
@@ -119,6 +119,10 @@ function ProbabilityGenerator() {
             return Status.NUMBER.FAIL;
         }
         return Status.NUMBER.POSTPONE;
+    };
+    
+    this.getReceptionTime= function(direction) {
+        return this.receptionTimes[direction];
     };
 
 }
