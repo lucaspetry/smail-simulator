@@ -60,9 +60,14 @@ function Simulation() {
  * Estatísticas da simulação
  */
 function Statistics() {
-    // Número de sucessos, falhas e adiamentos por direção de tráfego
+    // Parâmetros básicos de execução
     this.simulationTime = 0;
+
+    // Número de servidores nos centros de serviço
+    this.localServiceCenterServers = 0;
+    this.remoteServiceCenterServers = 0;
     
+    // Número de sucessos, falhas e adiamentos por direção de tráfego    
     this.trafficRate = [0, 0, 0, 0];
     this.trafficRate[Direction.NUMBER.LL] = [0, 0, 0];
     this.trafficRate[Direction.NUMBER.LR] = [0, 0, 0];
@@ -80,16 +85,20 @@ function Statistics() {
      * @param simulator simulador
      * @return
      */
-    this.updateStatistics = function(timeExecuted, event, simulator) {
+    this.updateStatistics = function(timeExecuted, event) {
         // Se é evento de saída gera estatísticas
         if(event instanceof OutServiceCenterEvent) {
             // Pega a mensagem e gera as estatísticas
             var email = event.email;
             this.trafficRate[email.direction][email.status]++;
         }
-        
+    };
+    
+    this.updateFinalStatistics = function(simulator) {        
         // Atualiza as estatísticas gerais
         this.simulationTime = simulator.simulation.simulationTime;
+        this.localServiceCenterServers = simulator.simulation.localServiceCenterServers;
+        this.remoteServiceCenterServers = simulator.simulation.remoteServiceCenterServers;
     };
     
     this.numberToString = function(number, size) {
@@ -102,7 +111,9 @@ function Statistics() {
         return (pad + str).slice(str.length);
     }
     
-    this.getSimulationReport = function() {
+    this.getSimulationReport = function(simulator) {
+        this.updateFinalStatistics(simulator);
+        
         var report =
             "==============================================================================================\n" +
             "                                    Relatório da Simulação                                    \n" +
@@ -110,8 +121,10 @@ function Statistics() {
             "\n" +
             "Parâmetros da simulação\n" +
             "----------------------------------------------------------------------------------------------\n" +
-            "Tempo de simulação:           " + this.numberToString(this.simulationTime, 8) + "                Núm. Servidores Dest. Local:  XXX\n" +
-            "Semente de aleatoriedade:     XXXXXXXX                Núm. Servidores Dest. Remoto: XXX\n" +
+            "Tempo de simulação:           " + this.numberToString(this.simulationTime, 8) +
+            "                Núm. Servidores Dest. Local:  " + this.numberToString(this.localServiceCenterServers, 8) + "\n" +
+            "Semente de aleatoriedade:     XXXXXXXX                Núm. Servidores Dest. Remoto: " +
+            this.numberToString(this.remoteServiceCenterServers, 8) + "\n" +
             "\n" +
             "Resultados da simulação\n" +
             "----------------------------------------------------------------------------------------------\n" +
@@ -326,7 +339,7 @@ function Simulator() {
             this.nextEvent.execute();
             
             // Atualiza as estatísticas
-            this.statistics.updateStatistics(this.nextEvent.time - currentTime, this.nextEvent, this);
+            this.statistics.updateStatistics(this.nextEvent.time - currentTime, this.nextEvent);
             
             // Atualiza a interface
             updateInterface();

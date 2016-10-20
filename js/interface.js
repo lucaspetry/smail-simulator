@@ -104,8 +104,8 @@ function stopSimulation() {
  */
 function simulationReport() {
     console.log("Method call: simulationReport()");
-        
-    var blob = new Blob([simulator.statistics.getSimulationReport()], {type: "text/plain;charset=utf-8"});
+
+    var blob = new Blob([simulator.statistics.getSimulationReport(simulator)], {type: "text/plain;charset=utf-8"});
     var currentdate = new Date();
     var datetime = currentdate.getFullYear() + "" + (currentdate.getMonth()+1) + "" + currentdate.getDate() + "@"
                 + currentdate.getHours() + "" + currentdate.getMinutes() + "" + currentdate.getSeconds();
