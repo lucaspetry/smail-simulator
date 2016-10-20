@@ -70,7 +70,27 @@ function Statistics() {
     this.trafficRate[Direction.NUMBER.LR] = [0, 0, 0];
     this.trafficRate[Direction.NUMBER.RL] = [0, 0, 0];
     this.trafficRate[Direction.NUMBER.RR] = [0, 0, 0];
-
+    
+    this.queuedMessagesReception = 0;
+    this.queuedMessagesServiceCenter = [0, 0];
+    this.queuedMessagesServiceCenter = [0, 0];
+    
+    /**
+     * Atualizar as estatísticas da simulação
+     * @param timeExecuted tempo executado desde o último evento e 
+     * @param event último evento executado
+     * @param simulator simulador
+     * @return
+     */
+    this.updateStatistics = function(timeExecuted, event, simulator) {
+        // Se é evento de saída gera estatísticas
+        if(event instanceof OutServiceCenterEvent) {
+            // Pega a mensagem e gera as estatísticas
+        }
+        
+        // Atualiza as estatísticas gerais
+    };
+    
     this.getSimulationReport = function() {
         var report =
             "==============================================================================================\n" +
@@ -109,6 +129,7 @@ function Statistics() {
  * Evento de chegada de mensagem no centro de recepção
  */
 function ArrivalReceptionCenterEvent(nextEventsList, currentTime, origin, simulator) {
+    this.name = "Chegada no Centro de Recepção (" + Message.INDEX[origin] + ")";
     this.nextEventsList = nextEventsList;
     this.origin = origin;
 
@@ -146,6 +167,7 @@ function ArrivalReceptionCenterEvent(nextEventsList, currentTime, origin, simula
  * Evento de saída de mensagem do centro de recepção
  */
 function OutReceptionCenterEvent(nextEventsList, currentTime, queueTime, simulator, origin, email) {
+    this.name = "Saída do Centro de Recepção";
     this.nextEventsList = nextEventsList;
     this.direction = simulator.probabilityGenerator.getDestination(origin);
     this.time = currentTime + queueTime + simulator.probabilityGenerator.getTimeToExit(this.direction);
@@ -172,6 +194,7 @@ function OutReceptionCenterEvent(nextEventsList, currentTime, queueTime, simulat
  * Evento de chegada de mensagem no centro de serviço
  */
 function ArrivalServiceCenterEvent(nextEventsList, time, serviceCenter, simulator, email) {
+    this.name = "Chegada no Centro de Serviço";
     this.nextEventsList = nextEventsList;
     this.time = time;
     this.serviceCenter = serviceCenter;
@@ -192,6 +215,7 @@ function ArrivalServiceCenterEvent(nextEventsList, time, serviceCenter, simulato
  * Evento de saída de mensagem do centro de serviço
  */
 function OutServiceCenterEvent(nextEventsList, currentTime, queueTime, serviceCenter, simulator, email) {
+    this.name = "Saída do Centro de Serviço";
     this.nextEventsList = nextEventsList;
     this.simulator = simulator;
     this.status = this.simulator.probabilityGenerator.getStatus();
@@ -225,6 +249,7 @@ function OutServiceCenterEvent(nextEventsList, currentTime, queueTime, serviceCe
  * Evento de início de simulação
  */
 function StartOfSimulationEvent(nextEventsList, time, simulator) {
+    this.name = "Início da Simulação";
     this.nextEventsList = nextEventsList;
     this.time = time;
 
@@ -241,6 +266,7 @@ function StartOfSimulationEvent(nextEventsList, time, simulator) {
  * Evento de fim de simulação
  */
 function EndOfSimulationEvent(time) {
+    this.name = "Fim da Simulação";
     this.time = time;
     this.execute = function() { };
 }
@@ -283,14 +309,18 @@ function Simulator() {
 
         // Se simulação não terminou, consome próximo evento
         if(self.nextEvent.time <= self.simulation.simulationTime) {
+            var currentTime = self.simulationTime;
             self.advanceToNextEvent();
             self.nextEvent.execute();
+            
+            // Atualiza as estatísticas
+            self.statistics.updateStatistics(self.nextEvent.time - currentTime, self.nextEvent, self);
+
+            // Atualiza a interface
+            updateInterface();
         } else { // Senão, para simulação/gera estatísticas
             self.stopSimulation();
         }
-
-        // Atualiza a interface
-        updateInterface();
     };
 
     /**
