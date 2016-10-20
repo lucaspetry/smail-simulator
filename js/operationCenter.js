@@ -154,19 +154,22 @@ function ProbabilityGenerator() {
         }
     };
 
-  this.getTimeToExit = function(key) {
-      return this.functionMap.get(key).get();
-  };
+    /**
+     * Obter o status de acordo com a direção
+     * @param direction direção da mensagem
+     * @return
+     */
+    this.getStatus = function(direction) {
+        var r = Math.random();
+        
+        if(r < this.trafficRate[direction][Status.NUMBER.SUCESS]){
+            return Status.NUMBER.SUCESS;
+        }
+        if(r > this.trafficRate[direction][Status.NUMBER.SUCESS]
+           && r < this.trafficRate[direction][Status.NUMBER.FAIL]){
+            return Status.NUMBER.FAIL;
+        }
+        return Status.NUMBER.POSTPONE;
+    };
 
-
-  this.getStatus = function() {
-      var r = Math.random();
-      if(r >= 0 && r <= probabilityOfSucces){
-        return "sucesso";
-      }
-      if(r > probabilityOfSucces && r <= probabilityOfFail){
-        return "falha";
-      }
-      return "adiado";
-  };
 }

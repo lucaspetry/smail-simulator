@@ -121,7 +121,7 @@ function ArrivalReceptionCenterEvent(nextEventsList, currentTime, origin, simula
 
     this.execute = function() {
         // Gera a próxima chegada dependendo do tipo desse evento
-        if(this.origin = Message.NUMBER.LOCAL) {
+        if(this.origin == Message.NUMBER.LOCAL) {
             this.nextEventsList.push(
                 new ArrivalReceptionCenterEvent(this.nextEventsList, this.time, Message.NUMBER.LOCAL, simulator));
         } else {
