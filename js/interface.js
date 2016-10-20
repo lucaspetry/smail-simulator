@@ -347,6 +347,26 @@ function updateServersMap(divId, numServers, numBusyServers, serversMap) {
         serversMap.update(serversData);
 }
 
+function updateEventsList() {
+    var events = simulator.nextEventsList;
+    var eventsTable = document.getElementById("events_table");
+    
+    eventsTable.innerHTML = "<tr>\n" +
+                            "<th style='width: 70px; text-align: right;'>Tempo</th>\n" +
+                            "<th style='width: 10px;'></th>\n" +
+                            "<th style='text-align: left;'>Evento</th>\n" +
+                            "</tr>\n";
+    
+    events.forEach(function(e) {
+        eventsTable.innerHTML +=
+                    "<tr>\n" +
+                    "<td style='text-align: right;'>" + e.time.toFixed(3) + "</td>\n" +
+                    "<td style='width: 10px;'></td>\n" +
+                    "<td style='text-align: left;'>" + e.name + "</td>\n" +
+                    "</tr>\n";        
+    });
+}
+
 /**
  * Atualizar a interface com as novas estatísticas
  */
@@ -354,7 +374,10 @@ function updateInterface() {
     console.log("Method call: updateInterface()");
     
     // Atualiza tempo atual
-    document.getElementById('simulation_currentTime').innerHTML = simulator.simulationCurrentTime;
+    document.getElementById('simulation_currentTime').innerHTML = simulator.simulationCurrentTime.toFixed(3);
+    
+    // Atualiza a lista de eventos
+    updateEventsList();
     
     // Atualiza dashboard de resultados de mensagens
     updateDashboard();
