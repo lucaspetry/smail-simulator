@@ -390,8 +390,8 @@
             </tr>
             <tr>
                 <td rowspan="2" style="vertical-align: top;">
-                    <div class="box_default" style="text-align: center; width: 290px; height: 100%;">
-<!--                        <div class="scroll_box" id="box_events" style="height: 100%;">-->
+                    <div class="box_default" style="text-align: center; width: 290px; height: 716px;">
+                        <div class="scroll_box" id="box_events" style="height: 100%;">
                             <span style="font-weight: bold; font-size: 1.3em;">Próximos Eventos</span>
                             <table id="events_table" border="0" style="border-collapse: collapse; width: inherit; margin-top: 10px">
                                 <tr>
@@ -400,11 +400,11 @@
                                     <th style="text-align: left;">Evento</th>
                                 </tr>
                             </table>
-<!--                        </div>-->
+                        </div>
                     </div>
                 </td>
                 <td>
-                    <div class="box_default" id="box_info" style="text-align: center; height: auto;">
+                    <div class="box_default" id="box_info" style="text-align: center; height: 320px;">
                         <span style="font-weight: bold; font-size: 1.3em;">Status dos Servidores por Centro de Serviço</span>
                         <table border="0">
                             <tr>
@@ -418,6 +418,13 @@
                                 </td>
                             </tr>
                             <tr>
+                                <th></th>
+                                <td>
+                                    Número de mensagens na fila: <span id="chart_localServiceCenter_queue" style="font-weight: bold; font-size: 14px;">0</span>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
                                 <th style="width: 200px;">Centro de Serviço<br>Destino Remoto</th>
                                 <td>
                                     <div id="chart_remoteServiceCenter"></div>
@@ -426,6 +433,13 @@
                                     Servidores ocupados:<br><br>
                                     <span id="chart_remoteServiceCenter_busy" style="font-weight: bold; font-size: 16px;">0</span>
                                 </td>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    Número de mensagens na fila: <span id="chart_remoteServiceCenter_queue" style="font-weight: bold; font-size: 14px;">0</span>
+                                </td>
+                                <td></td>
                             </tr>
                         </table>
                     </div>
@@ -437,6 +451,11 @@
                         <span style="font-weight: bold; font-size: 1.3em;">E-mails Processados x Resultado do Processamento</span>
                         <div id="dashboard"></div>
                     </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div class="box_default" style="text-align: center; height: 100px; width: 878px; cursor: default;"><h2>Teste</h2></div>
                 </td>
             </tr>
         </table>
