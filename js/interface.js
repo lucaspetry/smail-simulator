@@ -63,6 +63,8 @@ function playSimulation(src) {
     
     if(!simulator.simulationInProgress)
         loadInterfaceSettings();
+    
+    simulator.simulation.simulationSpeed = new Number(document.getElementById('field_simulationSpeed').value);
 
     if(src.id == "btn_play") {
         src.id = "btn_pause";
@@ -83,6 +85,8 @@ function stepSimulation() {
     
     if(!simulator.simulationInProgress)
         loadInterfaceSettings();
+    
+    simulator.simulation.simulationSpeed = new Number(document.getElementById('field_simulationSpeed').value);
 
     simulator.pauseSimulation();
     simulator.runStep();

@@ -330,6 +330,7 @@ function Simulator() {
             setSimulationStatus("Passo a passo.");            
         }
 
+        this.updateSimulationSpeed();
         this.simulationInProgress = true;
 
         // Se simulação não terminou, consome próximo evento
@@ -353,7 +354,7 @@ function Simulator() {
      */
     this.runSimulation = function() {
         var self = this; // Necessário para uso do temporizador
-        
+                
         // Inicializa a simulação se uma simulação ainda não estava em progresso
         if(this.simulationInProgress) {
             setSimulationStatus("Simulação resumida.");
@@ -400,6 +401,10 @@ function Simulator() {
         // Atualiza a interface
         updateInterface();
     };
+    
+    this.updateSimulationSpeed = function() {
+        this.simulationTimeInterval = 2500/this.simulation.simulationSpeed;
+    };
 
     /**
      * Inicializar a simulação (configurações, eventos iniciais)
@@ -414,7 +419,7 @@ function Simulator() {
         this.initializeProbabilityGenerator();
 
         // Inicializa parâmetros de tempo de execução
-        this.simulationTimeInterval = 2500/this.simulation.simulationSpeed;
+        this.updateSimulationSpeed();
         this.simulationCurrentTime = 0;
 
         this.statistics = new Statistics();
