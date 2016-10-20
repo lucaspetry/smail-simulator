@@ -30,6 +30,18 @@ Function = {
     }
 };
 
+Message = {
+    SIZE : 2,
+    INDEX : [
+        "LOCAL",
+        "REMOTE",
+    ],
+    NUMBER : {
+        LOCAL : 0,
+        REMOTE : 1
+    }    
+}
+
 // Origem e destino das requisições
 Direction = {
     SIZE : 4,

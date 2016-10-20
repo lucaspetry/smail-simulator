@@ -99,43 +99,57 @@ function Statistics() {
             "Taxa de ocupação dos centros de serviço                                                   \n" +
             "Destino Local                                           XXXXXX        XXXXXX        XXXXXX\n" +
             "Destino Remoto                                          XXXXXX        XXXXXX        XXXXXX\n";
-        
+
         return report;
     }
-    
+
 }
 
 /**
  * Evento de chegada de mensagem no centro de recepção
  */
-function ArrivalReceptionCenterEvent(nextEventsList, time, receptionCenter, serviceCenterLocal, serviceCenterRemote) {
+function ArrivalReceptionCenterEvent(nextEventsList, currentTime, origin, simulator) {
     this.nextEventsList = nextEventsList;
-    this.time = time;
-    this.receptionCenter = receptionCenter;
-    this.serviceCenterLocal = serviceCenterLocal;
-    this.serviceCenterRemote = serviceCenterRemote;
+    this.origin = origin;
+    
+    this.receptionCenter = simulator.receptionCenter;
+    this.serviceCenterLocal = simulator.serviceCenterLocal;
+    this.serviceCenterRemote = simulator.serviceCenterRemote;
+    this.probabilityGenerator = simulator.probabilityGenerator;
+    
+    this.time = currentTime + this.probabilityGenerator.getTimeToNextArrival(this.origin);
 
     this.execute = function() {
-        if(this.receptionCenter.queue.length == 0) {
-            this.nextEventsList.push(new OutReceptionCenterEvent(this.nextEventsList, this.time + 50, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
+        // Gera a próxima chegada dependendo do tipo desse evento
+        if(this.origin = Message.NUMBER.LOCAL) {
+            this.nextEventsList.push(
+                new ArrivalReceptionCenterEvent(this.nextEventsList, this.time, Message.NUMBER.LOCAL, simulator));
         } else {
-            this.receptionCenter.queue.push(this);
+            this.nextEventsList.push(
+                new ArrivalReceptionCenterEvent(this.nextEventsList, this.time, Message.NUMBER.REMOTE, simulator));            
         }
-        this.receptionCenter.totalMessages++;
-        this.receptionCenter.numMessagesIn++;
-        this.nextEventsList.push(new ArrivalReceptionCenterEvent(this.nextEventsList, this.time + 50, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
+        
+        // Se o centro de recepção está ocupado, aguarda na fila
+        // Caso contrário, gera evento de saída do centro de recepção
+        if(this.receptionCenter.isBusy()) {
+            this.receptionCenter.pushToWaitQueue(this);
+        } else {
+            this.nextEventsList.push(new OutReceptionCenterEvent(this.nextEventsList, this.time + 50, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
+        }
+//        this.receptionCenter.totalMessages++;
+//        this.receptionCenter.numMessagesIn++;
     };
 }
 
 /**
  * Evento de saída de mensagem do centro de recepção
  */
-function OutReceptionCenterEvent(nextEventsList, time, receptionCenter, serviceCenterLocal, serviceCenterRemote) {
+function OutReceptionCenterEvent(nextEventsList, time, simulator) {
     this.nextEventsList = nextEventsList;
     this.time = time;
-    this.receptionCenter = receptionCenter;
-    this.serviceCenterLocal = serviceCenterLocal;
-    this.serviceCenterRemote = serviceCenterRemote;
+    this.receptionCenter = simulator.receptionCenter;
+    this.serviceCenterLocal = simulator.serviceCenterLocal;
+    this.serviceCenterRemote = simulator.serviceCenterRemote;
 
     this.execute = function(){
         this.receptionCenter.numMessagesIn--;
@@ -191,19 +205,19 @@ function OutServiceCenterEvent(nextEventsList, time, serviceCenter) {
 /**
  * Evento de início de simulação
  */
-function StartOfSimulationEvent(nextEventsList, time, receptionCenter, serviceCenterLocal, serviceCenterRemote) {
+function StartOfSimulationEvent(nextEventsList, time, simulator) {
     this.nextEventsList = nextEventsList;
     this.time = time;
-    this.receptionCenter = receptionCenter;
-    this.serviceCenterLocal = serviceCenterLocal;
-    this.serviceCenterRemote = serviceCenterRemote;
+    this.receptionCenter = simulator.receptionCenter;
+    this.serviceCenterLocal = simulator.serviceCenterLocal;
+    this.serviceCenterRemote = simulator.serviceCenterRemote;
 
     this.execute = function() {
         // Cria os primeiros eventos de origem local e remota
         this.nextEventsList.push(
-            new ArrivalReceptionCenterEvent(this.nextEventsList, this.time, this.receptionCenter, this.localServiceCenter, this.remoteServiceCenter));
+            new ArrivalReceptionCenterEvent(this.nextEventsList, this.time, Message.NUMBER.LOCAL, simulator));
         this.nextEventsList.push(
-            new ArrivalReceptionCenterEvent(this.nextEventsList, this.time, this.receptionCenter, this.localServiceCenter, this.remoteServiceCenter));
+            new ArrivalReceptionCenterEvent(this.nextEventsList, this.time, Message.NUMBER.REMOTE, simulator));
     };
 }
 
@@ -327,8 +341,7 @@ function Simulator() {
         this.nextEventsList = new SortedArray([], null, function (a, b) {
             return a.time - b.time;
         });
-        this.nextEvent = new StartOfSimulationEvent(this.nextEventsList, this.simulationCurrentTime,
-                                                    this.receptionCenter, this.localServiceCenter, this.remoteServiceCenter);
+        this.nextEvent = new StartOfSimulationEvent(this.nextEventsList, this.simulationCurrentTime, this);
         this.nextEventsList.push(this.nextEvent);
         this.nextEventsList.push(new EndOfSimulationEvent(this.simulation.simulationTime));
     };
