@@ -56,6 +56,12 @@ Direction = {
         LR : 1,
         RL : 2,
         RR : 3
+    },
+    DESTINATION : {
+        LL : Message.NUMBER.LOCAL,
+        LR : Message.NUMBER.REMOTE,
+        RL : Message.NUMBER.LOCAL,
+        RR : Message.NUMBER.REMOTE
     }
 };
 

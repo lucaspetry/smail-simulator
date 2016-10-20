@@ -60,11 +60,13 @@ function updateFunctionParams(selectElement) {
  */
 function playSimulation(src) {
     console.log("Method call: playSimulation(src)");
+    
+    if(!simulator.simulationInProgress)
+        loadInterfaceSettings();
 
     if(src.id == "btn_play") {
         src.id = "btn_pause";
         document.getElementById("img_play").setAttribute("src", "images/appbar.control.pause.png");
-        loadInterfaceSettings();
         simulator.runSimulation();
     } else {
         src.id = "btn_play";
@@ -235,7 +237,7 @@ function loadInterfaceSettings() {
 
     simulator.simulation.localServiceCenterServers = document.getElementById('field_serversLocal').value;
     simulator.simulation.remoteServiceCenterServers = document.getElementById('field_serversRemote').value;
-
+    
     simulator.simulation.arrivalIntervalLocal[1] = document.getElementById('field_arrivalIntervalLocalParam1').value;
     simulator.simulation.arrivalIntervalRemote[1] = document.getElementById('field_arrivalIntervalRemoteParam1').value;
 
@@ -257,6 +259,8 @@ function loadInterfaceSettings() {
             func = func[func.selectedIndex].value;
             funcParams = Function.PARAMS[Function.INDEX[func]];
             
+            console.log(simulator.simulation.serviceTime[Direction.INDEX[i]]);
+            console.log(simulator.simulation.serviceTime[Direction.INDEX[i]][j]);
             simulator.simulation.serviceTime[Direction.INDEX[i]][j][0] = func;
 
             for(k = 0; k < funcParams.length; k++) {
@@ -360,7 +364,7 @@ function updateEventsList() {
     events.forEach(function(e) {
         eventsTable.innerHTML +=
                     "<tr>\n" +
-                    "<td style='text-align: right;'>" + e.time.toFixed(3) + "</td>\n" +
+                    "<td style='text-align: right;'>" + roundNumber(e.time, 3) + "</td>\n" +
                     "<td style='width: 10px;'></td>\n" +
                     "<td style='text-align: left;'>" + e.name + "</td>\n" +
                     "</tr>\n";        
@@ -374,7 +378,7 @@ function updateInterface() {
     console.log("Method call: updateInterface()");
     
     // Atualiza tempo atual
-    document.getElementById('simulation_currentTime').innerHTML = simulator.simulationCurrentTime.toFixed(3);
+    document.getElementById('simulation_currentTime').innerHTML = roundNumber(simulator.simulationCurrentTime, 3);
     
     document.getElementById('chart_localServiceCenter_busy').innerHTML = simulator.serviceCenterLocal.getNumberOfBusyServers();
     document.getElementById('chart_remoteServiceCenter_busy').innerHTML = simulator.serviceCenterRemote.getNumberOfBusyServers();

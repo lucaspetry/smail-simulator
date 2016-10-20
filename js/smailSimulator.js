@@ -37,11 +37,7 @@ function Simulation() {
     this.arrivalIntervalRemote = [Function.NUMBER.EXPONENCIAL, 0.6, 0, 0];
 
     // Tempo de recepção de acordo com a direção
-    this.receptionTime = [0, 0, 0, 0];
-    this.receptionTime[Direction.NUMBER.LL] = 0.12;
-    this.receptionTime[Direction.NUMBER.LR] = 0.12;
-    this.receptionTime[Direction.NUMBER.RL] = 0.14;
-    this.receptionTime[Direction.NUMBER.RR] = 0.16;
+    this.receptionTime = [0.12, 0.12, 0.14, 0.16];
 
     // Processamento das requisições
     this.serviceTime = {
@@ -65,6 +61,8 @@ function Simulation() {
  */
 function Statistics() {
     // Número de sucessos, falhas e adiamentos por direção de tráfego
+    this.simulationTime = 0;
+    
     this.trafficRate = [0, 0, 0, 0];
     this.trafficRate[Direction.NUMBER.LL] = [0, 0, 0];
     this.trafficRate[Direction.NUMBER.LR] = [0, 0, 0];
@@ -91,7 +89,18 @@ function Statistics() {
         }
         
         // Atualiza as estatísticas gerais
+        this.simulationTime = simulator.simulation.simulationTime;
     };
+    
+    this.numberToString = function(number, size) {
+        var str = new String(roundNumber(number, 3));
+        var pad = "";
+        
+        for(i = 0; i < size; i++)
+            pad += " ";
+        
+        return (pad + str).slice(str.length);
+    }
     
     this.getSimulationReport = function() {
         var report =
@@ -101,7 +110,7 @@ function Statistics() {
             "\n" +
             "Parâmetros da simulação\n" +
             "----------------------------------------------------------------------------------------------\n" +
-            "Tempo de simulação:           XXXXXXXX                Núm. Servidores Dest. Local:  XXX\n" +
+            "Tempo de simulação:           " + this.numberToString(this.simulationTime, 8) + "                Núm. Servidores Dest. Local:  XXX\n" +
             "Semente de aleatoriedade:     XXXXXXXX                Núm. Servidores Dest. Remoto: XXX\n" +
             "\n" +
             "Resultados da simulação\n" +
@@ -171,8 +180,8 @@ function ArrivalReceptionCenterEvent(nextEventsList, currentTime, origin, simula
 function OutReceptionCenterEvent(nextEventsList, currentTime, queueTime, simulator, origin, email) {
     this.name = "Saída do Centro de Recepção";
     this.nextEventsList = nextEventsList;
-    this.direction = simulator.probabilityGenerator.getDestination(origin);
-    this.time = currentTime + queueTime + simulator.probabilityGenerator.getReceptionTime(this.direction);
+    this.direction = simulator.probabilityGenerator.getDirection(origin);
+    this.time = currentTime + queueTime + new Number(simulator.probabilityGenerator.getReceptionTime(this.direction));
     this.receptionCenter = simulator.receptionCenter;
     this.serviceCenterLocal = simulator.serviceCenterLocal;
     this.serviceCenterRemote = simulator.serviceCenterRemote;
@@ -182,7 +191,12 @@ function OutReceptionCenterEvent(nextEventsList, currentTime, queueTime, simulat
 
     this.execute = function(){
         this.receptionCenter.currentEvent = undefined;
-        this.nextEventsList.push(new ArrivalServiceCenterEvent(this.nextEventsList, this.time, this.serviceCenterLocal, simulator, this.email));
+        var serviceCenter = this.serviceCenterLocal;
+        
+        if(Direction.DESTINATION[Direction.INDEX[this.direction]] == Message.NUMBER.REMOTE)
+            serviceCenter = this.serviceCenterRemote;
+        
+        this.nextEventsList.push(new ArrivalServiceCenterEvent(this.nextEventsList, this.time, serviceCenter, simulator, this.email));
         if(this.receptionCenter.waitQueue.length > 0) {
             var queueEvent = this.receptionCenter.waitQueue.shift(); 
             queueTime = this.time - queueEvent.time;
@@ -220,7 +234,7 @@ function OutServiceCenterEvent(nextEventsList, currentTime, queueTime, serviceCe
     this.nextEventsList = nextEventsList;
     this.simulator = simulator;
     this.status = this.simulator.probabilityGenerator.getStatus(email.direction);
-    this.time = currentTime + queueTime + this.simulator.probabilityGenerator.getServiceTime(email.direction, this.status);
+    this.time = currentTime + queueTime + new Number(this.simulator.probabilityGenerator.getServiceTime(email.direction, this.status));
     this.serviceCenter = serviceCenter;
     this.email = email;
     this.email.status = this.status;
@@ -273,7 +287,6 @@ function EndOfSimulationEvent(time) {
  */
 function Simulator() {
     "use strict";
-    var self = this; // Necessário para uso do temporizador
 
     this.simulation = new Simulation(); // Simulação padrão
     this.probabilityGenerator = new ProbabilityGenerator();
@@ -297,45 +310,51 @@ function Simulator() {
      * Executar um passo da simulação
      */
     this.runStep = function() { // Deve utilizar self para acessar o contexto por causa do timer
-        if(!self.simulationInProgress) {
+        if(!this.simulationInProgress) {
             setSimulationStatus("Simulação iniciada.");
-            self.initializeSimulation();
+            this.initializeSimulation();
+        } else if(!this.simulationRunning) {
+            setSimulationStatus("Passo a passo.");            
         }
 
-        self.simulationRunning = true;
-        self.simulationInProgress = true;
+        this.simulationInProgress = true;
 
         // Se simulação não terminou, consome próximo evento
-        if(!(self.nextEvent instanceof EndOfSimulationEvent)) {
-            var currentTime = self.simulationTime;
-            self.advanceToNextEvent();
-            self.nextEvent.execute();
+        if(!(this.nextEvent instanceof EndOfSimulationEvent)) {
+            var currentTime = this.simulationTime;
+            this.advanceToNextEvent();
+            this.nextEvent.execute();
             
             // Atualiza as estatísticas
-            self.statistics.updateStatistics(self.nextEvent.time - currentTime, self.nextEvent, self);
-
+            this.statistics.updateStatistics(this.nextEvent.time - currentTime, this.nextEvent, this);
+            
             // Atualiza a interface
             updateInterface();
         } else { // Senão, para simulação/gera estatísticas
-            self.stopSimulation();
+            this.stopSimulation();
         }
-        
-        self.simulationTimer = setTimeout(self.runStep, self.simulationTimeInterval);
     };
 
     /**
      * Executar (iniciar/resumir) a simulação
      */
     this.runSimulation = function() {
+        var self = this; // Necessário para uso do temporizador
+        
         // Inicializa a simulação se uma simulação ainda não estava em progresso
         if(this.simulationInProgress) {
             setSimulationStatus("Simulação resumida.");
-        } else {
-            setSimulationStatus("Simulação iniciada.");
         }
-
+        
+        function step() {
+            self.runStep();
+            self.runSimulation();
+        }
+        
         // Define a execução cíclica dos passos da simulação
-        this.runStep();
+        this.simulationRunning = true;
+        this.simulationTimer = setTimeout(function() { step(); }, self.simulationTimeInterval);
+
         //this.simulationTimer = setInterval(self.runStep, 5000);
     };
 
@@ -344,7 +363,7 @@ function Simulator() {
      */
     this.pauseSimulation = function() {
         setSimulationStatus("Simulação pausada.");
-        clearInterval(self.simulationTimer);
+        clearTimeout(this.simulationTimer);
         this.simulationRunning = false;
     };
 
@@ -357,7 +376,7 @@ function Simulator() {
         // Para a simulação
         this.simulationRunning = false;
         this.simulationInProgress = false;
-        clearInterval(self.simulationTimer);
+        clearTimeout(this.simulationTimer);
 
         // Computa as estatísticas até o momento
         // TODO Acredito que isso não será necessário!

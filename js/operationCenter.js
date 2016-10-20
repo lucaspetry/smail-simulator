@@ -43,7 +43,7 @@ function ProbabilityGenerator() {
     this.trafficRate;
     this.arrivalIntervalLocal = [/* Function.NUMBER, Param */];
     this.arrivalIntervalRemote = [/* Function.NUMBER, Param */];
-    this.receptionTimes;
+    this.receptionTimes = [0, 0, 0, 0];
     this.serviceTimeFunctions;
 
 
@@ -86,7 +86,7 @@ function ProbabilityGenerator() {
      * @param status resultado do processamento da mensagem
      * @return
      */
-    this.getDestination = function(origin) {
+    this.getDirection = function(origin) {
         var r = Math.random();
 
         if(origin == Message.NUMBER.LOCAL) {
@@ -111,17 +111,17 @@ function ProbabilityGenerator() {
      */
     this.getStatus = function(direction) {
         var r = Math.random();
-        if(r < this.trafficRate[direction][Status.NUMBER.SUCESS]){
+        if(r < this.trafficRate[direction][Status.NUMBER.SUCESS]/100){
             return Status.NUMBER.SUCESS;
         }
-        if(r > this.trafficRate[direction][Status.NUMBER.SUCESS]
-           && r < this.trafficRate[direction][Status.NUMBER.FAIL]){
+        if(r > this.trafficRate[direction][Status.NUMBER.SUCESS]/100
+           && r < this.trafficRate[direction][Status.NUMBER.FAIL]/100){
             return Status.NUMBER.FAIL;
         }
         return Status.NUMBER.POSTPONE;
     };
     
-    this.getReceptionTime= function(direction) {
+    this.getReceptionTime = function(direction) {
         return this.receptionTimes[direction];
     };
 

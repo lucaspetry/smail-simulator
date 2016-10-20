@@ -1,3 +1,8 @@
+function roundNumber(number, cases) {
+    var t = Math.pow(10, cases);
+    return Math.round(number*t)/t;
+}
+
 function getDistributionFunction(functionNumber) {
     var constant = function(a) {
         "use strict";
