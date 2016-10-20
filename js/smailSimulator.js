@@ -9,9 +9,9 @@
 function Simulation() {
     "use strict";
     // Parâmetros básicos de execução
-    this.simulationTime = 500;
+    this.simulationTime = 50;
     this.simulationSeed = 11;
-    this.simulationSpeed = 5;
+    this.simulationSpeed = 20;
 
     // Número de servidores nos centros de serviço
     this.localServiceCenterServers = 10;
@@ -181,7 +181,7 @@ function OutReceptionCenterEvent(nextEventsList, currentTime, queueTime, simulat
     this.name = "Saída do Centro de Recepção";
     this.nextEventsList = nextEventsList;
     this.direction = simulator.probabilityGenerator.getDirection(origin);
-    this.time = currentTime + queueTime + new Number(simulator.probabilityGenerator.getReceptionTime(this.direction));
+    this.time = currentTime + queueTime + simulator.probabilityGenerator.getReceptionTime(this.direction);
     this.receptionCenter = simulator.receptionCenter;
     this.serviceCenterLocal = simulator.serviceCenterLocal;
     this.serviceCenterRemote = simulator.serviceCenterRemote;
@@ -234,7 +234,7 @@ function OutServiceCenterEvent(nextEventsList, currentTime, queueTime, serviceCe
     this.nextEventsList = nextEventsList;
     this.simulator = simulator;
     this.status = this.simulator.probabilityGenerator.getStatus(email.direction);
-    this.time = currentTime + queueTime + new Number(this.simulator.probabilityGenerator.getServiceTime(email.direction, this.status));
+    this.time = currentTime + queueTime + this.simulator.probabilityGenerator.getServiceTime(email.direction, this.status);
     this.serviceCenter = serviceCenter;
     this.email = email;
     this.email.status = this.status;
@@ -396,7 +396,7 @@ function Simulator() {
         this.initializeProbabilityGenerator();
 
         // Inicializa parâmetros de tempo de execução
-        this.simulationTimeInterval = this.simulation.simulationSpeed * 100;
+        this.simulationTimeInterval = 2500/this.simulation.simulationSpeed;
         this.simulationCurrentTime = 0;
 
         this.statistics = new Statistics();

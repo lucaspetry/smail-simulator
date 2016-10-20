@@ -80,6 +80,9 @@ function playSimulation(src) {
  */
 function stepSimulation() {
     console.log("Method call: stepSimulation()");
+    
+    if(!simulator.simulationInProgress)
+        loadInterfaceSettings();
 
     simulator.pauseSimulation();
     simulator.runStep();
@@ -231,27 +234,27 @@ function loadDefaultSettings() {
 function loadInterfaceSettings() {
     console.log("Method call: loadInterfaceSettings()");
 
-    simulator.simulation.simulationTime = document.getElementById('field_simulationTime').value;
-    simulator.simulation.simulationSeed = document.getElementById('field_simulationSeed').value;
-    simulator.simulation.simulationSpeed = document.getElementById('field_simulationSpeed').value;
+    simulator.simulation.simulationTime = new Number(document.getElementById('field_simulationTime').value);
+    simulator.simulation.simulationSeed = new Number(document.getElementById('field_simulationSeed').value);
+    simulator.simulation.simulationSpeed = new Number(document.getElementById('field_simulationSpeed').value);
 
-    simulator.simulation.localServiceCenterServers = document.getElementById('field_serversLocal').value;
-    simulator.simulation.remoteServiceCenterServers = document.getElementById('field_serversRemote').value;
+    simulator.simulation.localServiceCenterServers = new Number(document.getElementById('field_serversLocal').value);
+    simulator.simulation.remoteServiceCenterServers = new Number(document.getElementById('field_serversRemote').value);
     
-    simulator.simulation.arrivalIntervalLocal[1] = document.getElementById('field_arrivalIntervalLocalParam1').value;
-    simulator.simulation.arrivalIntervalRemote[1] = document.getElementById('field_arrivalIntervalRemoteParam1').value;
+    simulator.simulation.arrivalIntervalLocal[1] = new Number(document.getElementById('field_arrivalIntervalLocalParam1').value);
+    simulator.simulation.arrivalIntervalRemote[1] = new Number(document.getElementById('field_arrivalIntervalRemoteParam1').value);
 
     for(i = 0; i < Direction.SIZE; i++) {
         // Volume de tráfego
-        simulator.simulation.traffic[i] = document.getElementById('field_traffic' + Direction.INDEX[i]).value;
+        simulator.simulation.traffic[i] = new Number(document.getElementById('field_traffic' + Direction.INDEX[i]).value);
 
         // Taxas de sucesso, falha e adiamento
-        simulator.simulation.trafficRate[i][0] = document.getElementById('field_rateSuccess' + Direction.INDEX[i]).value;
-        simulator.simulation.trafficRate[i][1] = document.getElementById('field_rateFailure' + Direction.INDEX[i]).value;
-        simulator.simulation.trafficRate[i][2] = document.getElementById('field_ratePostponement' + Direction.INDEX[i]).value;
+        simulator.simulation.trafficRate[i][0] = new Number(document.getElementById('field_rateSuccess' + Direction.INDEX[i]).value);
+        simulator.simulation.trafficRate[i][1] = new Number(document.getElementById('field_rateFailure' + Direction.INDEX[i]).value);
+        simulator.simulation.trafficRate[i][2] = new Number(document.getElementById('field_ratePostponement' + Direction.INDEX[i]).value);
 
         // Tempos de recepção
-        simulator.simulation.receptionTime[i] = document.getElementById('field_reception' + Direction.INDEX[i] + "Param1").value;
+        simulator.simulation.receptionTime[i] = new Number(document.getElementById('field_reception' + Direction.INDEX[i] + "Param1").value);
 
         // Tempos de serviço
         for(j = 0; j < Status.SIZE; j++) {
@@ -259,12 +262,22 @@ function loadInterfaceSettings() {
             func = func[func.selectedIndex].value;
             funcParams = Function.PARAMS[Function.INDEX[func]];
             
-            console.log(simulator.simulation.serviceTime[Direction.INDEX[i]]);
-            console.log(simulator.simulation.serviceTime[Direction.INDEX[i]][j]);
-            simulator.simulation.serviceTime[Direction.INDEX[i]][j][0] = func;
-
-            for(k = 0; k < funcParams.length; k++) {
-                simulator.simulation.serviceTime[Direction.INDEX[i]][j][k+1] = document.getElementById('field_service' + Direction.INDEX[i] + Status.INDEX[j] + "Param" + (k+1)).value;
+            switch(funcParams.length) {
+                case 1:
+                    simulator.simulation.serviceTime[Direction.INDEX[i]][j] = [func*1,
+                                            new Number(document.getElementById('field_service' + Direction.INDEX[i] + Status.INDEX[j] + "Param1").value)];
+                    break;
+                case 2:
+                    simulator.simulation.serviceTime[Direction.INDEX[i]][j] = [func*1,
+                                            new Number(document.getElementById('field_service' + Direction.INDEX[i] + Status.INDEX[j] + "Param1").value),
+                                            new Number(document.getElementById('field_service' + Direction.INDEX[i] + Status.INDEX[j] + "Param2").value)];
+                    break;
+                case 3:
+                    simulator.simulation.serviceTime[Direction.INDEX[i]][j] = [func*1,
+                                            new Number(document.getElementById('field_service' + Direction.INDEX[i] + Status.INDEX[j] + "Param1").value),
+                                            new Number(document.getElementById('field_service' + Direction.INDEX[i] + Status.INDEX[j] + "Param2").value),
+                                            new Number(document.getElementById('field_service' + Direction.INDEX[i] + Status.INDEX[j] + "Param3").value)];
+                    break;
             }
         }
     }

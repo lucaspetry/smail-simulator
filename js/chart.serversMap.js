@@ -72,7 +72,7 @@ function ServersMap() {
           .attr("height", gridSize)
           .style("fill", this.colors[0]);
 
-        cards.transition().duration(300)
+        cards.transition().duration(250)
           .style("fill", function(d) { return colorScale(d.value); });
 
         cards.select("title").text(function(d) { return d.value; });
@@ -88,7 +88,7 @@ function ServersMap() {
         var cards = this.svg.selectAll(".col")
           .data(data, function(d) {return d.row+':'+d.col;});
 
-        cards.transition().duration(300)
+        cards.transition().duration(250)
           .style("fill", function(d) { return colorScale(d.value); });
 
         cards.select("title").text(function(d) { return d.value; });

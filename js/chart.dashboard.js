@@ -103,13 +103,13 @@ function Dashboard() {
                 var bars = hGsvg.selectAll(".bar").data(nD);
 
                 // transition the height and color of rectangles.
-                bars.select("rect").transition().duration(500)
+                bars.select("rect").transition().duration(250)
                     .attr("y", function(d) {return y(d[1]); })
                     .attr("height", function(d) { return hGDim.h - y(d[1]); })
                     .attr("fill", color);
 
                 // transition the frequency labels location and change value.
-                bars.select("text").transition().duration(500)
+                bars.select("text").transition().duration(250)
                     .text(function(d){ return d3.format(",")(d[1])})
                     .attr("y", function(d) {return y(d[1])-5; });            
             }
