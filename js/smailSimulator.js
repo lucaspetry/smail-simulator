@@ -86,6 +86,8 @@ function Statistics() {
         // Se é evento de saída gera estatísticas
         if(event instanceof OutServiceCenterEvent) {
             // Pega a mensagem e gera as estatísticas
+            var email = event.email;
+            this.trafficRate[email.direction][email.status]++;
         }
         
         // Atualiza as estatísticas gerais
@@ -300,10 +302,11 @@ function Simulator() {
             self.initializeSimulation();
         }
 
+        self.simulationRunning = true;
         self.simulationInProgress = true;
 
         // Se simulação não terminou, consome próximo evento
-        if(self.nextEvent.time <= self.simulation.simulationTime) {
+        if(!(self.nextEvent instanceof EndOfSimulationEvent)) {
             var currentTime = self.simulationTime;
             self.advanceToNextEvent();
             self.nextEvent.execute();
@@ -316,6 +319,8 @@ function Simulator() {
         } else { // Senão, para simulação/gera estatísticas
             self.stopSimulation();
         }
+        
+        self.simulationTimer = setTimeout(self.runStep, self.simulationTimeInterval);
     };
 
     /**
@@ -327,12 +332,11 @@ function Simulator() {
             setSimulationStatus("Simulação resumida.");
         } else {
             setSimulationStatus("Simulação iniciada.");
-            this.initializeSimulation();
         }
 
         // Define a execução cíclica dos passos da simulação
-        this.simulationRunning = true;
-        this.simulationTimer = setInterval(this.runStep, this.simulationTimeInterval);
+        this.runStep();
+        //this.simulationTimer = setInterval(self.runStep, 5000);
     };
 
     /**
@@ -340,7 +344,7 @@ function Simulator() {
      */
     this.pauseSimulation = function() {
         setSimulationStatus("Simulação pausada.");
-        clearInterval(this.simulationTimer);
+        clearInterval(self.simulationTimer);
         this.simulationRunning = false;
     };
 
@@ -353,7 +357,7 @@ function Simulator() {
         // Para a simulação
         this.simulationRunning = false;
         this.simulationInProgress = false;
-        clearInterval(this.simulationTimer);
+        clearInterval(self.simulationTimer);
 
         // Computa as estatísticas até o momento
         // TODO Acredito que isso não será necessário!
@@ -392,7 +396,7 @@ function Simulator() {
      */
     this.advanceToNextEvent = function() {
         this.nextEvent = this.nextEventsList.shift();
-        this.simulationCurrentTime += this.nextEvent.time;
+        this.simulationCurrentTime = this.nextEvent.time;
     };
 
     /**
