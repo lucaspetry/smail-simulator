@@ -19,10 +19,10 @@ function Simulation() {
 
     // Volume de tráfego
     this.traffic = [0, 0, 0, 0];
-    this.traffic[Direction.NUMBER.LL] = 50;
-    this.traffic[Direction.NUMBER.LR] = 25;
-    this.traffic[Direction.NUMBER.RL] = 15;
-    this.traffic[Direction.NUMBER.RR] = 10;
+    this.traffic[Direction.NUMBER.LL] = 66;
+    this.traffic[Direction.NUMBER.LR] = 34;
+    this.traffic[Direction.NUMBER.RL] = 65;
+    this.traffic[Direction.NUMBER.RR] = 35;
 
     // Taxas de sucesso, falha e adiamento, respectivamente
     // Deve totalizar 100%

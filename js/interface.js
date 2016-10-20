@@ -376,6 +376,13 @@ function updateInterface() {
     // Atualiza tempo atual
     document.getElementById('simulation_currentTime').innerHTML = simulator.simulationCurrentTime.toFixed(3);
     
+    document.getElementById('chart_localServiceCenter_busy').innerHTML = simulator.serviceCenterLocal.getNumberOfBusyServers();
+    document.getElementById('chart_remoteServiceCenter_busy').innerHTML = simulator.serviceCenterRemote.getNumberOfBusyServers();
+    
+    document.getElementById('chart_localServiceCenter_queue').innerHTML = simulator.serviceCenterLocal.waitQueue.length;
+    document.getElementById('chart_remoteServiceCenter_queue').innerHTML = simulator.serviceCenterRemote.waitQueue.length;
+    
+    
     // Atualiza a lista de eventos
     updateEventsList();
     
@@ -383,8 +390,8 @@ function updateInterface() {
     updateDashboard();
     
     // Atualiza os mapas de servidores ocupados dos centros de serviço
-    updateServersMap('#chart_localServiceCenter', simulator.simulation.localServiceCenterServers, Math.ceil(Math.random()*10), localServersMap);
-    updateServersMap('#chart_remoteServiceCenter', simulator.simulation.remoteServiceCenterServers,  Math.ceil(Math.random()*20), remoteServersMap);
+    updateServersMap('#chart_localServiceCenter', simulator.simulation.localServiceCenterServers, simulator.serviceCenterLocal.getNumberOfBusyServers(), localServersMap);
+    updateServersMap('#chart_remoteServiceCenter', simulator.simulation.remoteServiceCenterServers,  simulator.serviceCenterRemote.getNumberOfBusyServers(), remoteServersMap);
     // TODO deve ser atualizado com os números reais
 }
 
