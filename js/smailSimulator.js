@@ -64,13 +64,13 @@ function Simulation() {
  * Estatísticas da simulação
  */
 function Statistics() {
-    // Número de sucessos, falhas e adiamentos por direção de tráfego    
+    // Número de sucessos, falhas e adiamentos por direção de tráfego
     this.trafficRate = [0, 0, 0, 0];
     this.trafficRate[Direction.NUMBER.LL] = [0, 0, 0];
     this.trafficRate[Direction.NUMBER.LR] = [0, 0, 0];
     this.trafficRate[Direction.NUMBER.RL] = [0, 0, 0];
     this.trafficRate[Direction.NUMBER.RR] = [0, 0, 0];
-    
+
     this.getSimulationReport = function() {
         var report =
             "==============================================================================================\n" +
@@ -111,52 +111,59 @@ function Statistics() {
 function ArrivalReceptionCenterEvent(nextEventsList, currentTime, origin, simulator) {
     this.nextEventsList = nextEventsList;
     this.origin = origin;
-    
+
     this.receptionCenter = simulator.receptionCenter;
     this.serviceCenterLocal = simulator.serviceCenterLocal;
     this.serviceCenterRemote = simulator.serviceCenterRemote;
     this.probabilityGenerator = simulator.probabilityGenerator;
-    
+    this.email = new Email();
+    this.email.origin = this.origin;
+
     this.time = currentTime + this.probabilityGenerator.getTimeToNextArrival(this.origin);
 
     this.execute = function() {
         // Gera a próxima chegada dependendo do tipo desse evento
-        if(this.origin = Message.NUMBER.LOCAL) {
+        if(this.origin == Message.NUMBER.LOCAL) {
             this.nextEventsList.push(
                 new ArrivalReceptionCenterEvent(this.nextEventsList, this.time, Message.NUMBER.LOCAL, simulator));
         } else {
             this.nextEventsList.push(
-                new ArrivalReceptionCenterEvent(this.nextEventsList, this.time, Message.NUMBER.REMOTE, simulator));            
+                new ArrivalReceptionCenterEvent(this.nextEventsList, this.time, Message.NUMBER.REMOTE, simulator));
         }
-        
+
         // Se o centro de recepção está ocupado, aguarda na fila
         // Caso contrário, gera evento de saída do centro de recepção
         if(this.receptionCenter.isBusy()) {
             this.receptionCenter.pushToWaitQueue(this);
         } else {
-            this.nextEventsList.push(new OutReceptionCenterEvent(this.nextEventsList, this.time + 50, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
+            this.receptionCenter.currentEvent = this;
+            this.nextEventsList.push(new OutReceptionCenterEvent(this.nextEventsList, currentTime, 0, simulator, origin, this.email));
         }
-//        this.receptionCenter.totalMessages++;
-//        this.receptionCenter.numMessagesIn++;
     };
 }
 
 /**
  * Evento de saída de mensagem do centro de recepção
  */
-function OutReceptionCenterEvent(nextEventsList, time, simulator) {
+function OutReceptionCenterEvent(nextEventsList, currentTime, queueTime, simulator, origin, email) {
     this.nextEventsList = nextEventsList;
-    this.time = time;
+    this.direction = simulator.probabilityGenerator.getDestination(origin);
+    this.time = currentTime + queueTime + simulator.probabilityGenerator.getTimeToExit(this.direction);
     this.receptionCenter = simulator.receptionCenter;
+    console.log(simulator);
     this.serviceCenterLocal = simulator.serviceCenterLocal;
     this.serviceCenterRemote = simulator.serviceCenterRemote;
+    this.email = email;
+    this.email.direction = this.direction;
+    this.email.timeInSystem += this.time - currentTime;
 
     this.execute = function(){
-        this.receptionCenter.numMessagesIn--;
-        this.nextEventsList.push(new ArrivalServiceCenterEvent(this.nextEventsList, this.time + 50, this.serviceCenterLocal));
-        if(this.receptionCenter.queue.length != 0) {
-            queueEvent = this.receptionCenter.queue.shift(); //time \/ vai ser o tempo de saida do evento atual + tempo gerado pela funcao
-            this.nextEventsList.push(new OutReceptionCenterEvent(this.nextEventsList, this.time + 50, this.receptionCenter, this.serviceCenterLocal, this.serviceCenterRemote));
+        this.receptionCenter.currentEvent = undefined;
+        this.nextEventsList.push(new ArrivalServiceCenterEvent(this.nextEventsList, this.time, this.serviceCenterLocal, this.email));
+        if(this.receptionCenter.waitQueue.length > 0) {
+            var queueEvent = this.receptionCenter.waitQueue.shift(); 
+            queueTime = this.time - queueEvent.time;
+            this.nextEventsList.push(new OutReceptionCenterEvent(this.nextEventsList, this.time, queueTime, simulator, origin, this.email));
         }
     };
 }
@@ -164,19 +171,19 @@ function OutReceptionCenterEvent(nextEventsList, time, simulator) {
 /**
  * Evento de chegada de mensagem no centro de serviço
  */
-function ArrivalServiceCenterEvent(nextEventsList, time, serviceCenter) {
+function ArrivalServiceCenterEvent(nextEventsList, time, serviceCenter, simulator, email) {
     this.nextEventsList = nextEventsList;
     this.time = time;
     this.serviceCenter = serviceCenter;
-
+    this.simulator = simulator;
+    this.email = email;
+    
     this.execute = function() {
-        this.serviceCenter.totalMessages++;
-        this.serviceCenter.numMessagesIn++;
-        if(this.serviceCenter.queue.length == 0) {
-            // verifica qual vai ser a saida do evento, sucesso, falha, adiamento, e então cria o evento de saida
-            this.nextEventsList.push(new OutServiceCenterEvent(this.nextEventsList, this.time + 50, this.serviceCenter));
+        if(this.serviceCenter.availableServers > 0) {
+            this.serviceCenter.availableServers--;
+            this.nextEventsList.push(new OutServiceCenterEvent(this.nextEventsList, this.time, 0, this.serviceCenter, this.simulator, this.email));
         } else {
-            this.serviceCenter.queue.push(this);
+            this.serviceCenter.waitQueue.push(this);
         }
     };
 }
@@ -184,21 +191,33 @@ function ArrivalServiceCenterEvent(nextEventsList, time, serviceCenter) {
 /**
  * Evento de saída de mensagem do centro de serviço
  */
-function OutServiceCenterEvent(nextEventsList, time, serviceCenter) {
+function OutServiceCenterEvent(nextEventsList, currentTime, queueTime, serviceCenter, simulator, email) {
     this.nextEventsList = nextEventsList;
-    this.time = time;
+    this.simulator = simulator;
+    this.status = this.simulator.probabilityGenerator.getStatus();
+    this.time = currentTime + queueTime + this.simulator.probabilityGenerator.getServiceTime(email.direction, this.status);
     this.serviceCenter = serviceCenter;
+    this.email = email;
+    this.email.status = this.status;
+    this.email.timeInSystem += this.time - currentTime;
 
     this.execute = function() {
-        //verifica o tipo de saida e toma as atitudes necessarias, exemplo adiamento precisa criar um evento de chegada no centro servico
-
-        if(this.serviceCenter.queue.length != 0) {
-            this.serviceCenter.queue.shift();
-            // verifica qual vai ser a saida do evento, sucesso, falha, adiamento, e então cria o evento de saida
-            //precisa atualizar o tempo que ficou na fila
-            this.nextEventsList.push(new OutServiceCenterEvent(this.nextEventsList, this.time + 50, this.serviceCenter));
+        switch(this.status) {
+            case Status.NUMBER.SUCESS:
+                //computa tempo mesagem
+            case Status.NUMBER.FAIL:
+                return exponencial;
+            case Status.NUMBER.POSTPONE:
+                 this.nextEventsList.push(new ArrivalServiceCenterEvent(this.nextEventsList, this.time, this.serviceCenterLocal, this.simulator, this.email));
+                this.message.postponements++;
         }
-        this.serviceCenter.numMessagesIn--;
+        this.serviceCenter.availableServers++;
+        
+        if(this.serviceCenter.waitQueue.length > 0) {
+            var queueEvent = this.serviceCenter.waitQueue.shift();
+            queueTime = this.time - queueEvent.time;
+            this.nextEventsList.push(new OutServiceCenterEvent(this.nextEventsList, this.time, queueTime, this.serviceCenter, this.simulator, this.email));
+        }
     };
 }
 
@@ -208,9 +227,6 @@ function OutServiceCenterEvent(nextEventsList, time, serviceCenter) {
 function StartOfSimulationEvent(nextEventsList, time, simulator) {
     this.nextEventsList = nextEventsList;
     this.time = time;
-    this.receptionCenter = simulator.receptionCenter;
-    this.serviceCenterLocal = simulator.serviceCenterLocal;
-    this.serviceCenterRemote = simulator.serviceCenterRemote;
 
     this.execute = function() {
         // Cria os primeiros eventos de origem local e remota
@@ -243,8 +259,8 @@ function Simulator() {
     this.simulationTimeInterval = undefined; // Intervalo de execução/atualização da interface
 
     this.receptionCenter = undefined // Centro de recepção
-    this.localServiceCenter = undefined // Centro de serviço local
-    this.remoteServiceCenter = undefined // Centro de serviço remoto
+    this.serviceCenterLocal = undefined // Centro de serviço local
+    this.serviceCenterRemote = undefined // Centro de serviço remoto
 
     this.simulationInProgress = false; // Simulação em progresso ou parada/terminada
     this.simulationRunning = false; // Simulação executando no momento ou pausada
@@ -253,7 +269,7 @@ function Simulator() {
     this.nextEvent = undefined; // Próximo evento a ser executado
     this.statistics = new Statistics(); // Estatísticas da simulação
 
-    
+
     /**
      * Executar um passo da simulação
      */
@@ -262,9 +278,9 @@ function Simulator() {
             setSimulationStatus("Simulação iniciada.");
             self.initializeSimulation();
         }
-        
+
         self.simulationInProgress = true;
-        
+
         // Se simulação não terminou, consome próximo evento
         if(self.nextEvent.time <= self.simulation.simulationTime) {
             self.advanceToNextEvent();
@@ -308,7 +324,7 @@ function Simulator() {
      */
     this.stopSimulation = function() {
         setSimulationStatus("Simulação parada.");
-        
+
         // Para a simulação
         this.simulationRunning = false;
         this.simulationInProgress = false;
@@ -322,11 +338,11 @@ function Simulator() {
     /**
      * Inicializar a simulação (configurações, eventos iniciais)
      */
-    this.initializeSimulation = function() {        
+    this.initializeSimulation = function() {
         // Inicializa centros de recepção e serviço
         this.receptionCenter = new ReceptionCenter();
-        this.localServiceCenter = new ServiceCenter(this.simulation.localServiceCenterServers);
-        this.remoteServiceCenter = new ServiceCenter(this.simulation.remoteServiceCenterServers);
+        this.serviceCenterLocal = new ServiceCenter(this.simulation.localServiceCenterServers);
+        this.serviceCenterRemote = new ServiceCenter(this.simulation.remoteServiceCenterServers);
 
         // Inicializa o gerador de probabilidades
         this.initializeProbabilityGenerator();
@@ -334,9 +350,9 @@ function Simulator() {
         // Inicializa parâmetros de tempo de execução
         this.simulationTimeInterval = this.simulation.simulationSpeed * 100;
         this.simulationCurrentTime = 0;
-        
+
         this.statistics = new Statistics();
-        
+
         // Inicializa a lista de próximos eventos com eventos iniciais
         this.nextEventsList = new SortedArray([], null, function (a, b) {
             return a.time - b.time;
@@ -368,33 +384,14 @@ function Simulator() {
         this.probabilityGenerator.arrivalIntervalRemote = this.simulation.arrivalIntervalRemote;
         this.probabilityGenerator.receptionTimes = this.simulation.receptionTime;
         this.probabilityGenerator.serviceTimeFunctions = this.simulation.serviceTime;
-
-//      //Recption center
-//      this.probabilityGenerator.localProbabilityFunction = view.data;
-//      this.probabilityGenerator.remoteProbabilityFunction = view.data;
-//      this.probabilityGenerator.local2LocalReceptionTime = view.data;
-//      this.probabilityGenerator.local2RemoteReceptionTime = view.data;
-//      this.probabilityGenerator.remote2RemoteReceptionTime = view.data;
-//      this.probabilityGenerator.remote2LocalReceptionTime = view.data;
-//      this.probabilityGenerator.probabilityOfDestinyBeLocal = view.data;
-//      this.probabilityGenerator.probabilityOfDestinyBeRemote = view.data;
-//
-//      //Service center
-//      this.probabilityGenerator.probabilityOfSucces = view.data;
-//      this.probabilityGenerator.probabilityOfFail = view.data;
-//      this.probabilityGenerator.probabilityOfPostponed = view.data;
-//      this.probabilityGenerator.LLSProbabilityFunction = view.data;
-//      this.probabilityGenerator.LLFProbabilityFunction = view.data;
-//      this.probabilityGenerator.LLAProbabilityFunction = view.data;
-//      this.probabilityGenerator.LRSProbabilityFunction = view.data;
-//      this.probabilityGenerator.LRFProbabilityFunction = view.data;
-//      this.probabilityGenerator.LRAProbabilityFunction = view.data;
-//      this.probabilityGenerator.RLSProbabilityFunction = view.data;
-//      this.probabilityGenerator.RLFProbabilityFunction = view.data;
-//      this.probabilityGenerator.RLAProbabilityFunction = view.data;
-//      this.probabilityGenerator.RRSProbabilityFunction = view.data;
-//      this.probabilityGenerator.RRFProbabilityFunction = view.data;
-//      this.probabilityGenerator.RRAProbabilityFunction = view.data;
     };
 
+}
+
+function Email() {
+    this.origin;
+    this.destination;
+    this.status;
+    this.timeInSystem = 0;
+    this.postponements = 0;
 }
