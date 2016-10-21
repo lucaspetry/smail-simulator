@@ -215,7 +215,7 @@ function Statistics() {
  * Evento de chegada de mensagem no centro de recepção
  */
 function ArrivalReceptionCenterEvent(nextEventsList, currentTime, origin, simulator) {
-    this.name = "Chegada no Centro de Recepção (" + Message.INDEX[origin] + ")";
+    this.name = "Chegada no Centro de Recepção (Origem " + Message.NAME[Message.INDEX[origin]] + ")";
     this.nextEventsList = nextEventsList;
     this.origin = origin;
 
@@ -284,7 +284,7 @@ function OutReceptionCenterEvent(nextEventsList, currentTime, queueTime, simulat
  * Evento de chegada de mensagem no centro de serviço
  */
 function ArrivalServiceCenterEvent(nextEventsList, time, serviceCenter, simulator, email) {
-    this.name = "Chegada no Centro de Serviço";
+    this.name = "Chegada no Centro de Serviço (" + Direction.NAME[Direction.INDEX[email.direction]] + ")";
     this.nextEventsList = nextEventsList;
     this.time = time;
     this.serviceCenter = serviceCenter;
