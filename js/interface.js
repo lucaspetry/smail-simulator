@@ -367,7 +367,7 @@ function updateEventsList() {
     events.forEach(function(e) {
         eventsTable.innerHTML +=
                     "<tr>\n" +
-                    "<td style='text-align: right;'>" + roundNumber(e.time, 3) + "</td>\n" +
+                    "<td style='text-align: right;'>" + roundNumber(e.time, 4) + "</td>\n" +
                     "<td style='width: 10px;'></td>\n" +
                     "<td style='text-align: left;'>" + e.name + "</td>\n" +
                     "</tr>\n";        
@@ -381,7 +381,7 @@ function updateInterface() {
     console.log("Method call: updateInterface()");
     
     // Atualiza tempo atual
-    document.getElementById('simulation_currentTime').innerHTML = roundNumber(simulator.simulationCurrentTime, 3);
+    document.getElementById('simulation_currentTime').innerHTML = roundNumber(simulator.simulationCurrentTime, 4);
     
     document.getElementById('chart_localServiceCenter_busy').innerHTML = simulator.serviceCenterLocal.getNumberOfBusyServers();
     document.getElementById('chart_remoteServiceCenter_busy').innerHTML = simulator.serviceCenterRemote.getNumberOfBusyServers();

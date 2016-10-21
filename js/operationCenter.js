@@ -35,6 +35,10 @@ function ServiceCenter(numberOfServers) {
     this.getNumberOfBusyServers = function() {
         return this.numberOfServers - this.availableServers;
     };
+    
+    this.occupationRate = function() {
+        return this.getNumberOfBusyServers()/this.numberOfServers;
+    }
 }
 
 /**

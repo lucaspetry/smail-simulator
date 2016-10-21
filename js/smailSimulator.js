@@ -9,9 +9,9 @@
 function Simulation() {
     "use strict";
     // Parâmetros básicos de execução
-    this.simulationTime = 50;
+    this.simulationTime = 30;
     this.simulationSeed = 11;
-    this.simulationSpeed = 20;
+    this.simulationSpeed = 50;
 
     // Número de servidores nos centros de serviço
     this.localServiceCenterServers = 10;
@@ -33,7 +33,7 @@ function Simulation() {
     this.trafficRate[Direction.NUMBER.RR] = [82.0, 9.0,  9.0];
 
     // Tempo entre chegadas de mensagens
-    this.arrivalIntervalLocal = [Function.NUMBER.EXPONENCIAL, 0.5, 0, 0];
+    this.arrivalIntervalLocal = [Function.NUMBER.EXPONENCIAL, 0.3, 0, 0];
     this.arrivalIntervalRemote = [Function.NUMBER.EXPONENCIAL, 0.6, 0, 0];
 
     // Tempo de recepção de acordo com a direção
@@ -43,13 +43,13 @@ function Simulation() {
     this.serviceTime = {
         LL : [[Function.NUMBER.NORMAL, 0.55, 0.05, 0],
               [Function.NUMBER.TRIANGULAR, 0.02, 0.05, 0.12],
-              [Function.NUMBER.UNIFORM, 0.06, 0.15, 0]],
+              [Function.NUMBER.CONSTANT, 0.3, 0, 0]],
         LR : [[Function.NUMBER.NORMAL, 0.65, 0.04, 0],
               [Function.NUMBER.EXPONENCIAL, 0.6, 0, 0],
               [Function.NUMBER.TRIANGULAR, 0.05, 0.07, 0.10]],
         RL : [[Function.NUMBER.UNIFORM, 0.03, 0.11, 0],
               [Function.NUMBER.EXPONENCIAL, 0.46, 0, 0],
-              [Function.NUMBER.NORMAL, 0.72, 0.09, 0]],
+              [Function.NUMBER.CONSTANT, 0.72, 0, 0]],
         RR : [[Function.NUMBER.UNIFORM, 0.09, 0.45, 0],
               [Function.NUMBER.TRIANGULAR, 0.08, 0.15, 0.22],
               [Function.NUMBER.NORMAL, 0.63, 0.04, 0]]
@@ -69,14 +69,23 @@ function Statistics() {
     
     // Número de sucessos, falhas e adiamentos por direção de tráfego    
     this.trafficRate = [0, 0, 0, 0];
-    this.trafficRate[Direction.NUMBER.LL] = [0, 0, 0];
-    this.trafficRate[Direction.NUMBER.LR] = [0, 0, 0];
-    this.trafficRate[Direction.NUMBER.RL] = [0, 0, 0];
-    this.trafficRate[Direction.NUMBER.RR] = [0, 0, 0];
+    this.trafficRate[Direction.NUMBER.LL] = [0, 0, 0, 0]; // Last index = total
+    this.trafficRate[Direction.NUMBER.LR] = [0, 0, 0, 0];
+    this.trafficRate[Direction.NUMBER.RL] = [0, 0, 0, 0];
+    this.trafficRate[Direction.NUMBER.RR] = [0, 0, 0, 0];
+
+    this.totalDispatchedMessages = 0;
+                               /*      Mínimo,        Médio,          Máximo*/
+    this.messagesSystemTime = [Number.MAX_SAFE_INTEGER, 0, Number.MIN_SAFE_INTEGER];
     
-    this.queuedMessagesReception = 0;
-    this.queuedMessagesServiceCenter = [0, 0];
-    this.queuedMessagesServiceCenter = [0, 0];
+                                  /*      Mínimo,        Médio,          Máximo*/
+    this.totalMessagesInSystem = [0, 0, Number.MIN_SAFE_INTEGER];
+    this.totalMessagesInSystemEnd = 0;
+    
+                                      /*      Mínimo,        Médio,          Máximo*/
+    this.occupationRateLocalCenter = [0, 0, Number.MIN_SAFE_INTEGER];
+                                       /*      Mínimo,        Médio,          Máximo*/
+    this.occupationRateRemoteCenter = [0, 0, Number.MIN_SAFE_INTEGER];
     
     /**
      * Atualizar as estatísticas da simulação
@@ -85,13 +94,49 @@ function Statistics() {
      * @param simulator simulador
      * @return
      */
-    this.updateStatistics = function(timeExecuted, event) {
+    this.updateStatistics = function(timeExecuted, event, simulator) {
         // Se é evento de saída gera estatísticas
         if(event instanceof OutServiceCenterEvent) {
             // Pega a mensagem e gera as estatísticas
             var email = event.email;
+            // Total por direção e status
             this.trafficRate[email.direction][email.status]++;
+            // Total por direção
+            this.trafficRate[email.direction][3]++;
+            // Total de mensagens despachadas
+            this.totalDispatchedMessages++;
+            
+            // Média de tempo no sistema
+            this.messagesSystemTime[1] += email.timeInSystem;
+            // Menor tempo no sistema
+            if(email.timeInSystem < this.messagesSystemTime[0])
+                this.messagesSystemTime[0] = email.timeInSystem;
+            // Maior tempo no sistema
+            if(email.timeInSystem > this.messagesSystemTime[1])
+                this.messagesSystemTime[1] = email.timeInSystem;
         }
+        
+        // Atualiza mensagens no sistema
+        var msgsNow = simulator.numberOfMessagesInSystem();
+        this.totalMessagesInSystem[1] += msgsNow * timeExecuted;
+        
+        if(msgsNow > this.totalMessagesInSystem[2])
+            this.totalMessagesInSystem[2] = msgsNow;
+        
+        // Atualiza ocupação do centro local
+        var localOccupationNow = simulator.serviceCenterLocal.occupationRate();
+        this.occupationRateLocalCenter[1] += localOccupationNow * timeExecuted;
+
+        if(localOccupationNow > this.occupationRateLocalCenter[2])
+            this.occupationRateLocalCenter[2] = localOccupationNow;
+        
+        // Atualiza ocupação do centro remoto
+        var remoteOccupationNow = simulator.serviceCenterRemote.occupationRate();
+        this.occupationRateRemoteCenter[1] += remoteOccupationNow * timeExecuted;
+
+        if(remoteOccupationNow > this.occupationRateRemoteCenter[2])
+            this.occupationRateRemoteCenter[2] = remoteOccupationNow;
+        
     };
     
     this.updateFinalStatistics = function(simulator) {        
@@ -99,10 +144,17 @@ function Statistics() {
         this.simulationTime = simulator.simulation.simulationTime;
         this.localServiceCenterServers = simulator.simulation.localServiceCenterServers;
         this.remoteServiceCenterServers = simulator.simulation.remoteServiceCenterServers;
+        
+        this.messagesSystemTime[1] /= this.totalDispatchedMessages;
+        this.totalMessagesInSystem[1] /= this.simulationTime;
+        this.totalMessagesInSystemEnd = simulator.numberOfMessagesInSystem();
+        
+        this.occupationRateLocalCenter[1] /= this.simulationTime;
+        this.occupationRateRemoteCenter[1] /= this.simulationTime;
     };
     
     this.numberToString = function(number, size) {
-        var str = new String(roundNumber(number, 3));
+        var str = new String(roundNumber(number, 4));
         var pad = "";
         
         for(i = 0; i < size; i++)
@@ -121,28 +173,38 @@ function Statistics() {
             "\n" +
             "Parâmetros da simulação\n" +
             "----------------------------------------------------------------------------------------------\n" +
-            "Tempo de simulação:           " + this.numberToString(this.simulationTime, 8) +
-            "                Núm. Servidores Dest. Local:  " + this.numberToString(this.localServiceCenterServers, 8) + "\n" +
-            "Semente de aleatoriedade:     XXXXXXXX                Núm. Servidores Dest. Remoto: " +
-            this.numberToString(this.remoteServiceCenterServers, 8) + "\n" +
+            "Tempo de simulação:           " + this.numberToString(this.simulationTime, 10) +
+            "            Núm. Servidores Dest. Local:  " + this.numberToString(this.localServiceCenterServers, 10) + "\n" +
+            "Semente de aleatoriedade:     XXXXXXXXXX            Núm. Servidores Dest. Remoto: " +
+            this.numberToString(this.remoteServiceCenterServers, 10) + "\n" +
             "\n" +
             "Resultados da simulação\n" +
             "----------------------------------------------------------------------------------------------\n" +
-            "                                                         Média        Mínimo        Máximo\n" +
-            "Número de mensagens no sistema                          XXXXXX        XXXXXX        XXXXXX\n" +
-            "Tempo de trânsito das mensagens no sistema              XXXXXX        XXXXXX        XXXXXX\n" +
+            "                                                         Mínimo          Média        Máximo\n" +
+            "Número de mensagens no sistema                       " + this.numberToString(this.totalMessagesInSystem[0], 10) +
+            "     " + this.numberToString(this.totalMessagesInSystem[1], 10) + "    " + this.numberToString(this.totalMessagesInSystem[2], 10) + "\n" +
+            "Tempo de trânsito das mensagens no sistema           " + this.numberToString(this.messagesSystemTime[0], 10) +
+            "     " + this.numberToString(this.messagesSystemTime[1], 10) + "    " + this.numberToString(this.messagesSystemTime[2], 10) + "\n" +
             "\n" +
-            "Mensagens despachadas                                                                     \n" +
-            "Total                                                   XXXXXX        XXXXXX        XXXXXX\n" +
-            "Mensagens despachadas LOCAL -> LOCAL                    XXXXXX        XXXXXX        XXXXXX\n" +
-            "Mensagens despachadas LOCAL -> REMOTO                   XXXXXX        XXXXXX        XXXXXX\n" +
-            "Mensagens despachadas REMOTO -> LOCAL                   XXXXXX        XXXXXX        XXXXXX\n" +
-            "Mensagens despachadas REMOTO -> REMOTO                  XXXXXX        XXXXXX        XXXXXX\n" +
-            "Total de mensagens no sistema no fim da simulação       XXXXXX        XXXXXX        XXXXXX\n" +
+            "Mensagens despachadas                                                                       \n" +
+            "Total                                                " + this.numberToString(this.totalDispatchedMessages, 10) +
+            "     " + this.numberToString(this.totalDispatchedMessages, 10) + "    " + this.numberToString(this.totalDispatchedMessages, 10) + "\n" +
+            "Mensagens despachadas LOCAL -> LOCAL                 " + this.numberToString(this.trafficRate[0][3], 10) +
+            "     " + this.numberToString(this.trafficRate[0][3], 10) + "    " + this.numberToString(this.trafficRate[0][3], 10) + "\n" +
+            "Mensagens despachadas LOCAL -> REMOTO                " + this.numberToString(this.trafficRate[1][3], 10) +
+            "     " + this.numberToString(this.trafficRate[1][3], 10) + "    " + this.numberToString(this.trafficRate[1][3], 10) + "\n" +
+            "Mensagens despachadas REMOTO -> LOCAL                " + this.numberToString(this.trafficRate[2][3], 10) +
+            "     " + this.numberToString(this.trafficRate[2][3], 10) + "    " + this.numberToString(this.trafficRate[2][3], 10) + "\n" +
+            "Mensagens despachadas REMOTO -> REMOTO               " + this.numberToString(this.trafficRate[3][3], 10) +
+            "     " + this.numberToString(this.trafficRate[3][3], 10) + "    " + this.numberToString(this.trafficRate[3][3], 10) + "\n" +
+            "Total de mensagens no sistema no fim da simulação    " + this.numberToString(this.totalMessagesInSystemEnd, 10) +
+            "     " + this.numberToString(this.totalMessagesInSystemEnd, 10) + "    " + this.numberToString(this.totalMessagesInSystemEnd, 10) + "\n" +
             "\n" +
-            "Taxa de ocupação dos centros de serviço                                                   \n" +
-            "Destino Local                                           XXXXXX        XXXXXX        XXXXXX\n" +
-            "Destino Remoto                                          XXXXXX        XXXXXX        XXXXXX\n";
+            "Taxa de ocupação dos centros de serviço                                                     \n" +
+            "Destino Local                                        " + this.numberToString(this.occupationRateLocalCenter[0], 10) +
+            "     " + this.numberToString(this.occupationRateLocalCenter[1], 10) + "    " + this.numberToString(this.occupationRateLocalCenter[2], 10) + "\n" +
+            "Destino Remoto                                       " + this.numberToString(this.occupationRateRemoteCenter[0], 10) +
+            "     " + this.numberToString(this.occupationRateRemoteCenter[1], 10) + "    " + this.numberToString(this.occupationRateRemoteCenter[2], 10) + "\n";
 
         return report;
     }
@@ -324,10 +386,10 @@ function Simulator() {
      */
     this.runStep = function() { // Deve utilizar self para acessar o contexto por causa do timer
         if(!this.simulationInProgress) {
-            setSimulationStatus("Simulação iniciada.");
+            setSimulationStatus("<span style='color: #41ab5d'>Simulação iniciada.</span>");
             this.initializeSimulation();
         } else if(!this.simulationRunning) {
-            setSimulationStatus("Passo a passo.");            
+            setSimulationStatus("<span style='color: #41ab5d'>Passo a passo.</span>");            
         }
 
         this.updateSimulationSpeed();
@@ -340,7 +402,7 @@ function Simulator() {
             this.nextEvent.execute();
             
             // Atualiza as estatísticas
-            this.statistics.updateStatistics(this.nextEvent.time - currentTime, this.nextEvent);
+            this.statistics.updateStatistics(this.nextEvent.time - currentTime, this.nextEvent, this);
             
             // Atualiza a interface
             updateInterface();
@@ -357,7 +419,7 @@ function Simulator() {
                 
         // Inicializa a simulação se uma simulação ainda não estava em progresso
         if(this.simulationInProgress) {
-            setSimulationStatus("Simulação resumida.");
+            setSimulationStatus("<span style='color: #41ab5d'>Simulação resumida.</span>");
         }
         
         function step() {
@@ -378,7 +440,7 @@ function Simulator() {
      * Pausar a simulação
      */
     this.pauseSimulation = function() {
-        setSimulationStatus("Simulação pausada.");
+        setSimulationStatus("<span style='color: #f2d013'>Simulação pausada.</span>");
         clearTimeout(this.simulationTimer);
         this.simulationRunning = false;
     };
@@ -387,7 +449,7 @@ function Simulator() {
      * Parar a simulação e calcular as estatísticas finais
      */
     this.stopSimulation = function() {
-        setSimulationStatus("Simulação parada.");
+        setSimulationStatus("<span style='color: #d83838'>Simulação parada.</span>");
 
         // Para a simulação
         this.simulationRunning = false;
@@ -449,6 +511,23 @@ function Simulator() {
     this.computeFinalStatistics = function() {
 
     };
+    
+    /**
+     * Obter o número de mensagens no sistema no momento
+     * @return
+     */
+    this.numberOfMessagesInSystem = function() {
+        var reception = this.receptionCenter.isBusy() ? 1 : 0;
+        reception += this.receptionCenter.waitQueue.length;
+        
+        var localCenter = this.serviceCenterLocal.getNumberOfBusyServers()
+                    + this.serviceCenterLocal.waitQueue.length;
+        
+        var remoteCenter = this.serviceCenterRemote.getNumberOfBusyServers()
+                    + this.serviceCenterRemote.waitQueue.length;
+        
+        return reception + localCenter + remoteCenter;
+    }
 
     this.initializeProbabilityGenerator = function() {
         this.probabilityGenerator.trafficVolume = this.simulation.traffic;
