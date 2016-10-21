@@ -382,12 +382,15 @@ function updateInterface() {
     
     // Atualiza tempo atual
     document.getElementById('simulation_currentTime').innerHTML = roundNumber(simulator.simulationCurrentTime, 4);
+    document.getElementById('simulation_messages').innerHTML = simulator.numberOfMessagesInSystem();
     
     document.getElementById('chart_localServiceCenter_busy').innerHTML = simulator.serviceCenterLocal.getNumberOfBusyServers();
     document.getElementById('chart_remoteServiceCenter_busy').innerHTML = simulator.serviceCenterRemote.getNumberOfBusyServers();
     
+    document.getElementById('chart_receptionCenter_queue').innerHTML = simulator.receptionCenter.waitQueue.length;
     document.getElementById('chart_localServiceCenter_queue').innerHTML = simulator.serviceCenterLocal.waitQueue.length;
     document.getElementById('chart_remoteServiceCenter_queue').innerHTML = simulator.serviceCenterRemote.waitQueue.length;
+    
     
     
     // Atualiza a lista de eventos

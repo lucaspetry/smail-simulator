@@ -39,7 +39,11 @@ Message = {
     NUMBER : {
         LOCAL : 0,
         REMOTE : 1
-    }    
+    },
+    NAME : {
+        LOCAL : "Local",
+        REMOTE : "Remoto"
+    }
 }
 
 // Origem e destino das requisições
@@ -62,6 +66,12 @@ Direction = {
         LR : Message.NUMBER.REMOTE,
         RL : Message.NUMBER.LOCAL,
         RR : Message.NUMBER.REMOTE
+    },
+    NAME : {
+        LL : "Local -> Local",
+        LR : "Local -> Remoto",
+        RL : "Remoto -> Local",
+        RR : "Remoto -> Remoto"        
     }
 };
 
