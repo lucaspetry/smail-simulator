@@ -146,7 +146,7 @@ function Statistics() {
         this.remoteServiceCenterServers = simulator.simulation.remoteServiceCenterServers;
         
         this.messagesSystemTime[1] = this.messagesSystemTime[1]/this.totalDispatchedMessages;
-        this.totalMessagesInSystem[1] /= this.simulationTime;
+        this.totalMessagesInSystem[1] = this.totalMessagesInSystem[1]/this.simulationTime;
         this.totalMessagesInSystemEnd = simulator.numberOfMessagesInSystem();
         
         this.occupationRateLocalCenter[1] = this.occupationRateLocalCenter[1]/this.simulationTime;
