@@ -321,12 +321,13 @@ function OutServiceCenterEvent(nextEventsList, currentTime, queueTime, serviceCe
             this.email.postponements++;
         }
     
-        this.serviceCenter.availableServers++;
         
         if(this.serviceCenter.waitQueue.length > 0) {
             var queueEvent = this.serviceCenter.waitQueue.shift();
             queueTime = this.time - queueEvent.time;
             this.nextEventsList.push(new OutServiceCenterEvent(this.nextEventsList, this.time, queueTime, this.serviceCenter, this.simulator, this.email));
+        }else {
+            this.serviceCenter.availableServers++;
         }
     };
 }
