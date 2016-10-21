@@ -398,7 +398,7 @@ function Simulator() {
 
         // Se simulação não terminou, consome próximo evento
         if(!(this.nextEvent instanceof EndOfSimulationEvent)) {
-            var currentTime = this.simulationTime;
+            var currentTime = this.simulationCurrentTime;
             this.advanceToNextEvent();
             this.nextEvent.execute();
             
