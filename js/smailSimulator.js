@@ -145,12 +145,12 @@ function Statistics() {
         this.localServiceCenterServers = simulator.simulation.localServiceCenterServers;
         this.remoteServiceCenterServers = simulator.simulation.remoteServiceCenterServers;
         
-        this.messagesSystemTime[1] /= this.totalDispatchedMessages;
+        this.messagesSystemTime[1] = this.messagesSystemTime[1]/this.totalDispatchedMessages;
         this.totalMessagesInSystem[1] /= this.simulationTime;
         this.totalMessagesInSystemEnd = simulator.numberOfMessagesInSystem();
         
-        this.occupationRateLocalCenter[1] /= this.simulationTime;
-        this.occupationRateRemoteCenter[1] /= this.simulationTime;
+        this.occupationRateLocalCenter[1] = this.occupationRateLocalCenter[1]/this.simulationTime;
+        this.occupationRateRemoteCenter[1] = this.occupationRateRemoteCenter[1]/this.simulationTime;
     };
     
     this.numberToString = function(number, size) {
