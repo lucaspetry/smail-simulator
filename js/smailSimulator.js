@@ -112,8 +112,8 @@ function Statistics() {
             if(email.timeInSystem < this.messagesSystemTime[0])
                 this.messagesSystemTime[0] = email.timeInSystem;
             // Maior tempo no sistema
-            if(email.timeInSystem > this.messagesSystemTime[1])
-                this.messagesSystemTime[1] = email.timeInSystem;
+            if(email.timeInSystem > this.messagesSystemTime[2])
+                this.messagesSystemTime[2] = email.timeInSystem;
         }
         
         // Atualiza mensagens no sistema
